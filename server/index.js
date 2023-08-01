@@ -29,13 +29,10 @@ const games = {};
 app.post("/createGame", (req, res) => {
     const gameId = generateGameId();
     const gameNamespace = io.of(`/game/${gameId}`);
-    console.log("fuck");
-    console.log(gameNamespace === io.of(`/game/${gameId}`));
     games[gameId] = game_1.createGame(gameNamespace, gameId, () => {
         deleteGame(gameId);
     });
     res.json({ gameId });
-    console.log(Object.keys(io._nsps));
     console.log(`Created game ${gameId}`);
     // Schedule the game for removal an hour from now
     setTimeout(() => {
@@ -52,13 +49,11 @@ function generateGameId() {
     return id;
 }
 function deleteGame(gameId) {
-    /*
     if (games[gameId]) {
-      io.of(`/game/${gameId}`).local.disconnectSockets();
-      io._nsps.delete(`/game/${gameId}`);
-      delete games[gameId];
-      console.log(`Deleted game ${gameId}`);
+        io.of(`/game/${gameId}`).local.disconnectSockets();
+        io._nsps.delete(`/game/${gameId}`);
+        delete games[gameId];
+        console.log(`Deleted game ${gameId}`);
     }
-    */
 }
 server.listen(3000, () => console.log("Server listening on port 3000"));

@@ -21,7 +21,6 @@ function createGame(namespace, gameId, onGameEnd) {
     };
     let answerTimer = null;
     namespace.on("connection", (socket) => {
-        console.log(`Client connected to game ${gameId}`);
         namespace.emit("gameState", Object.assign({}, gameState));
         // Handle player registration
         socket.on("register", (data) => {
