@@ -23,6 +23,7 @@ io.on("connection", (socket: Socket) => {
     if (games[gameId]) {
       socket.join(gameId);
     } else {
+      socket.disconnect(true); // disconnect the client's socket
       console.log("Invalid room join.")
     }
   });
