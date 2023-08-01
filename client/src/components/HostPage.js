@@ -10,7 +10,7 @@ function HostPage() {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    const socket = io(`https://ekimbox.ue.r.appspot.com`);
+    const socket = io(`https://ekimbox-server.onrender.com/`);
 
     socket.on("gameState", (newGameState) => {
       setGameState(newGameState);

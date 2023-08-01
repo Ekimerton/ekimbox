@@ -13,7 +13,7 @@ function LandingPage() {
   const handleCreateGame = async () => {
     try {
       const response = await axios.post(
-        "https://ekimbox.ue.r.appspot.com/createGame"
+        "https://ekimbox-server.onrender.com/createGame"
       );
       const gameId = response.data.gameId;
       navigate(`/host/${gameId}`);

@@ -26,7 +26,7 @@ function ControllerPage() {
   }
 
   useEffect(() => {
-    const newSocket = io(`https://ekimbox.ue.r.appspot.com`);
+    const newSocket = io(`https://ekimbox-server.onrender.com`);
     newSocket.on("connect", () => {
       newSocket.emit("joinRoom", gameId);
       setConnected(true);
