@@ -1,0 +1,17 @@
+.ControllerPage {
+    background: linear-gradient(316deg, #8372dd, #4ba0d0);
+    /* #282c34 */
+    background-size: 600% 600%;
+    -webkit-animation: AnimationName 28s ease infinite;
+    -moz-animation: AnimationName 28s ease infinite;
+    animation: AnimationName 28s ease infinite;
+
+    height: 90vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
