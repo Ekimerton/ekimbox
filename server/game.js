@@ -9,7 +9,7 @@ exports.ANSWER_TIME = 60 * 1000; // seconds
 exports.VOTE_TIME = 30 * 1000; // seconds
 exports.SCORE_TIME = 10 * 1000; // seconds
 exports.BUFFER_TIME = 0 * 1000; // seconds
-function createGame(io, gameId, onGameEnd) {
+function createGame(namespace, gameId, onGameEnd) {
     let gameState = {
         round: 0,
         stage: "register",
@@ -20,8 +20,9 @@ function createGame(io, gameId, onGameEnd) {
         players: [],
     };
     let answerTimer = null;
-    io.on("connection", (socket) => {
-        io.to(gameId).emit("gameState", Object.assign({}, gameState));
+    namespace.on("connection", (socket) => {
+        console.log(`Client connected to game ${gameId}`);
+        namespace.emit("gameState", Object.assign({}, gameState));
         // Handle player registration
         socket.on("register", (data) => {
             // Check if the name is already in use
@@ -44,7 +45,7 @@ function createGame(io, gameId, onGameEnd) {
                     gameState.vipID = player.id;
                 }
             }
-            io.to(gameId).emit("gameState", Object.assign({}, gameState)); // Emit to all sockets in the room
+            namespace.emit("gameState", Object.assign({}, gameState)); // Emit to all sockets in the namespace
         });
         // Handle new answers
         socket.on("newAnswer", (data) => {
@@ -69,7 +70,7 @@ function createGame(io, gameId, onGameEnd) {
             gameState.stage = "answer";
             gameState.prompt = "What's the deal with airplane food?";
             gameState.timeEnd = Date.now() + exports.ANSWER_TIME; // 60 seconds from now
-            io.to(gameId).emit("gameState", Object.assign({}, gameState));
+            namespace.emit("gameState", Object.assign({}, gameState));
             // Start a 60-second timer
             answerTimer = global.setTimeout(progressGame, exports.ANSWER_TIME);
         });
@@ -101,7 +102,7 @@ function createGame(io, gameId, onGameEnd) {
                 }
                 gameState.stage = "vote";
                 gameState.subStage = 0;
-                gameState.comparisonPairs = (0, utils_1.getComparisonPairs)(gameState.answers);
+                gameState.comparisonPairs = utils_1.getComparisonPairs(gameState.answers);
                 gameState.timeEnd = Date.now() + exports.VOTE_TIME;
                 // Start a VOTE_TIME-second timer for the vote stage
                 answerTimer = global.setTimeout(progressGame, exports.VOTE_TIME + exports.BUFFER_TIME);
@@ -136,7 +137,7 @@ function createGame(io, gameId, onGameEnd) {
                         answerTimer = null;
                     }
                     // Emit the final game state
-                    io.to(gameId).emit("gameState", gameState);
+                    namespace.emit("gameState", gameState);
                     // Remove the game from the games object after a delay
                     setTimeout(() => {
                         onGameEnd();
@@ -150,7 +151,7 @@ function createGame(io, gameId, onGameEnd) {
                     gameState.answers = {};
                 }
             }
-            io.to(gameId).emit("gameState", gameState);
+            namespace.emit("gameState", gameState);
         }
     }
     return {

@@ -9,28 +9,31 @@ function HostPage() {
   const [gameState, setGameState] = useState({});
   const [connected, setConnected] = useState(false);
 
-  const socket = io(`https://ekimbox-server.onrender.com/game/${gameId}`);
-
   useEffect(() => {
-    socket.on("gameState", (newGameState) => {
+    const newSocket = io(`https://ekimbox-server.onrender.com/game/${gameId}`);
+
+    newSocket.on("gameState", (newGameState) => {
       setGameState(newGameState);
     });
 
-    socket.on("connect", () => {
-      setConnected(true);
+    newSocket.on("connect_error", (error) => {
+      console.log(error);
     });
 
-    socket.on("disconnect", () => {
+    newSocket.on("connect", () => {
+      setConnected(true);
+      newSocket.emit("ready");
+    });
+
+    newSocket.on("disconnect", () => {
       setConnected(false);
     });
 
-    socket.emit("ready");
-
     return () => {
-      socket.off("gameState");
-      socket.close();
+      newSocket.off("gameState");
+      newSocket.close();
     };
-  }, [gameId]);
+  }, [gameId]); // dependency array has gameId, so the useEffect runs whenever gameId changes
 
   return (
     <div className="funky-background column-view">
@@ -71,8 +74,7 @@ function HostPage() {
         )}
         {gameState.stage === "score" && (
           <div className="card frosted-glass">
-            {" "}
-            <ScoreView gameState={gameState} />{" "}
+            <ScoreView gameState={gameState} />
           </div>
         )}
         {gameState.stage === "end" && (

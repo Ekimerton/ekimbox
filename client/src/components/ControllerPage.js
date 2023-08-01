@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Timer from "./Timer";
 import RegisterView from "./RegisterView";
 import ScoreView from "./ScoreView";
@@ -11,10 +11,32 @@ function ControllerPage() {
   const [gameState, setGameState] = useState({});
   const [answer, setAnswer] = useState("");
   const [vote, setVote] = useState("");
-  const [connected, setConnected] = useState(true);
+  const [connected, setConnected] = useState(false);
 
+  const socketRef = useRef();
   const { gameId } = useParams();
-  const socket = io(`https://ekimbox-server.onrender.com/game/${gameId}`);
+
+  useEffect(() => {
+    socketRef.current = io(
+      `https://ekimbox-server.onrender.com/game/${gameId}`
+    );
+
+    socketRef.current.on("connect", () => {
+      setConnected(true);
+    });
+    socketRef.current.on("gameState", (newGameState) => {
+      setGameState(newGameState);
+    });
+    socketRef.current.on("disconnect", () => setConnected(false));
+    socketRef.current.emit("ready");
+
+    return () => {
+      socketRef.current.off("gameState");
+      socketRef.current.off("connect");
+      socketRef.current.off("disconnect");
+      socketRef.current.close();
+    };
+  }, [gameId]);
 
   // Check if the client already has an ID in local storage
   let clientId = localStorage.getItem("clientId");
@@ -25,25 +47,7 @@ function ControllerPage() {
     localStorage.setItem("clientId", clientId);
   }
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      setConnected(true);
-    });
-    socket.on("gameState", (newGameState) => {
-      setGameState(newGameState);
-    });
-    socket.on("disconnect", () => setConnected(false));
-    socket.emit("ready");
-
-    return () => {
-      socket.off("gameState");
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.close();
-    };
-  }, [socket]);
-
-  const handleRegister = () => {
+  const handleRegister = useCallback(() => {
     if (
       gameState.players &&
       Object.values(gameState.players).some(
@@ -54,22 +58,22 @@ function ControllerPage() {
       console.log("can't use that name");
       return;
     }
-    socket.emit("register", { id: clientId, name: name });
-  };
+    socketRef.current.emit("register", { id: clientId, name: name });
+  }, [gameState.players, name, clientId]);
 
-  const handleAnswer = () => {
-    socket.emit("newAnswer", { userId: clientId, answer });
+  const handleAnswer = useCallback(() => {
+    socketRef.current.emit("newAnswer", { userId: clientId, answer });
     setAnswer("");
-  };
+  }, [clientId, answer]);
 
-  const handleVote = () => {
-    socket.emit("newVote", { userId: clientId, vote });
+  const handleVote = useCallback(() => {
+    socketRef.current.emit("newVote", { userId: clientId, vote });
     setVote("");
-  };
+  }, [clientId, vote]);
 
-  const handleStartGame = () => {
-    socket.emit("startGame", clientId);
-  };
+  const handleStartGame = useCallback(() => {
+    socketRef.current.emit("startGame", clientId);
+  }, [clientId]);
 
   if (!gameState.stage) {
     return <p>Loading...</p>;

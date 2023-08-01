@@ -8,8 +8,8 @@ const http_1 = __importDefault(require("http"));
 const socket_io_1 = __importDefault(require("socket.io"));
 const cors_1 = __importDefault(require("cors"));
 const game_1 = require("./game");
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const app = express_1.default();
+app.use(cors_1.default());
 app.use(express_1.default.json()); // for parsing application/json
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.default.Server(server, {
@@ -20,16 +20,6 @@ const io = new socket_io_1.default.Server(server, {
         credentials: true,
     },
 });
-io.on("connection", (socket) => {
-    socket.on("joinRoom", (gameId) => {
-        if (games[gameId]) {
-            socket.join(gameId);
-        }
-        else {
-            console.log("Invalid room join.");
-        }
-    });
-});
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
@@ -38,10 +28,14 @@ const games = {};
 // Handle game creation
 app.post("/createGame", (req, res) => {
     const gameId = generateGameId();
-    games[gameId] = (0, game_1.createGame)(io, gameId, () => {
+    const gameNamespace = io.of(`/game/${gameId}`);
+    console.log("fuck");
+    console.log(gameNamespace === io.of(`/game/${gameId}`));
+    games[gameId] = game_1.createGame(gameNamespace, gameId, () => {
         deleteGame(gameId);
     });
     res.json({ gameId });
+    console.log(Object.keys(io._nsps));
     console.log(`Created game ${gameId}`);
     // Schedule the game for removal an hour from now
     setTimeout(() => {
@@ -58,10 +52,13 @@ function generateGameId() {
     return id;
 }
 function deleteGame(gameId) {
+    /*
     if (games[gameId]) {
-        delete games[gameId];
-        io.in(gameId).socketsLeave(gameId);
+      io.of(`/game/${gameId}`).local.disconnectSockets();
+      io._nsps.delete(`/game/${gameId}`);
+      delete games[gameId];
+      console.log(`Deleted game ${gameId}`);
     }
-    console.log(`Deleted game ${gameId}`);
+    */
 }
 server.listen(3000, () => console.log("Server listening on port 3000"));

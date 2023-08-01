@@ -52,12 +52,14 @@ function generateGameId(): string {
 }
 
 function deleteGame(gameId: string) {
+  /*
   if (games[gameId]) {
-    delete games[gameId];
     io.of(`/game/${gameId}`).local.disconnectSockets();
     io._nsps.delete(`/game/${gameId}`);
+    delete games[gameId];
     console.log(`Deleted game ${gameId}`);
   }
+  */
 }
 
 server.listen(3000, () => console.log("Server listening on port 3000"));
