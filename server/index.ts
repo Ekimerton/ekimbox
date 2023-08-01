@@ -28,6 +28,11 @@ io.on("connection", (socket: Socket) => {
   });
 });
 
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World");
+});
+
+
 // Map to store all active games
 const games: Record<string, ReturnType<typeof createGame>> = {};
 
