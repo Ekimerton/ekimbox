@@ -11,7 +11,7 @@ app.use(express.json()); // for parsing application/json
 const server: http.Server = http.createServer(app);
 const io: IOServer = new socketIo.Server(server, {
   cors: {
-    origin: ["http://localhost:3001", "http://192.168.1.139:3001"],
+    origin: ["http://localhost:3001", "https://ekimbox.vercel.app"],
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
