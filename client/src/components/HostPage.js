@@ -9,15 +9,14 @@ function HostPage() {
   const [gameState, setGameState] = useState({});
   const [connected, setConnected] = useState(false);
 
-  useEffect(() => {
-    const socket = io(`https://ekimbox-server.onrender.com/`);
+  const socket = io(`https://ekimbox-server.onrender.com/game/${gameId}`);
 
+  useEffect(() => {
     socket.on("gameState", (newGameState) => {
       setGameState(newGameState);
     });
 
     socket.on("connect", () => {
-      socket.emit("joinRoom", gameId);
       setConnected(true);
     });
 
@@ -32,10 +31,6 @@ function HostPage() {
       socket.close();
     };
   }, [gameId]);
-
-  if (!gameId) {
-    return <p>Invalid game ID</p>;
-  }
 
   return (
     <div className="funky-background column-view">

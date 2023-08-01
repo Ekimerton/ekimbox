@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useParams } from "react-router-dom";
 
 function ControllerPage() {
-  const [socket, setSocket] = useState(null);
   const [name, setName] = useState("");
   const [gameState, setGameState] = useState({});
   const [answer, setAnswer] = useState("");
@@ -15,6 +14,7 @@ function ControllerPage() {
   const [connected, setConnected] = useState(true);
 
   const { gameId } = useParams();
+  const socket = io(`https://ekimbox-server.onrender.com/game/${gameId}`);
 
   // Check if the client already has an ID in local storage
   let clientId = localStorage.getItem("clientId");
@@ -26,26 +26,22 @@ function ControllerPage() {
   }
 
   useEffect(() => {
-    const newSocket = io(`https://ekimbox-server.onrender.com`);
-    newSocket.on("connect", () => {
-      newSocket.emit("joinRoom", gameId);
+    socket.on("connect", () => {
       setConnected(true);
     });
-    newSocket.on("gameState", (newGameState) => {
+    socket.on("gameState", (newGameState) => {
       setGameState(newGameState);
     });
-    newSocket.on("disconnect", () => setConnected(false));
-    newSocket.emit("ready");
-
-    setSocket(newSocket);
+    socket.on("disconnect", () => setConnected(false));
+    socket.emit("ready");
 
     return () => {
-      newSocket.off("gameState");
-      newSocket.off("connect");
-      newSocket.off("disconnect");
-      newSocket.close();
+      socket.off("gameState");
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.close();
     };
-  }, [gameId]);
+  }, [socket]);
 
   const handleRegister = () => {
     if (

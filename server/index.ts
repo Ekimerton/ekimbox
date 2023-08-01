@@ -18,21 +18,9 @@ const io: IOServer = new socketIo.Server(server, {
   },
 });
 
-io.on("connection", (socket: Socket) => {
-  socket.on("joinRoom", (gameId) => {
-    if (games[gameId]) {
-      socket.join(gameId);
-    } else {
-      socket.disconnect(true); // disconnect the client's socket
-      console.log("Invalid room join.")
-    }
-  });
-});
-
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });
-
 
 // Map to store all active games
 const games: Record<string, ReturnType<typeof createGame>> = {};
@@ -40,7 +28,8 @@ const games: Record<string, ReturnType<typeof createGame>> = {};
 // Handle game creation
 app.post("/createGame", (req: Request, res: Response) => {
   const gameId = generateGameId();
-  games[gameId] = createGame(io, gameId, () => {
+  const gameNamespace = io.of(`/game/${gameId}`);
+  games[gameId] = createGame(gameNamespace, gameId, () => {
     deleteGame(gameId);
   });
   res.json({ gameId });
@@ -51,8 +40,6 @@ app.post("/createGame", (req: Request, res: Response) => {
     deleteGame(gameId);
   }, 60 * 60 * 1000); // 60 minutes * 60 seconds/minute * 1000 milliseconds/second
 });
-
-
 
 // Function to generate a unique game ID
 function generateGameId(): string {
@@ -66,10 +53,11 @@ function generateGameId(): string {
 
 function deleteGame(gameId: string) {
   if (games[gameId]) {
-  delete games[gameId];
-  io.in(gameId).socketsLeave(gameId);
+    delete games[gameId];
+    io.of(`/game/${gameId}`).local.disconnectSockets();
+    io._nsps.delete(`/game/${gameId}`);
+    console.log(`Deleted game ${gameId}`);
   }
-  console.log(`Deleted game ${gameId}`);
 }
 
 server.listen(3000, () => console.log("Server listening on port 3000"));

@@ -1,4 +1,4 @@
-import { Server as IOServer, Socket } from "socket.io";
+import { Socket, Namespace } from "socket.io";
 import { getComparisonPairs } from "./utils";
 
 export const MAX_ROUNDS = 3;
@@ -27,7 +27,7 @@ interface GameState {
   comparisonPairs: [string, string][];
 }
 
-export function createGame(io: IOServer, gameId: string, onGameEnd: () => void) {
+export function createGame(namespace: Namespace, gameId: string, onGameEnd: () => void) {
   let gameState: GameState = {
     round: 0,
     stage: "register",
@@ -40,9 +40,9 @@ export function createGame(io: IOServer, gameId: string, onGameEnd: () => void) 
 
   let answerTimer: NodeJS.Timeout | null = null;
 
-  io.on("connection", (socket: Socket) => {
+  namespace.on("connection", (socket: Socket) => {
 
-    io.to(gameId).emit("gameState", { ...gameState });
+    namespace.emit("gameState", { ...gameState });
 
     // Handle player registration
     socket.on("register", (data) => {
@@ -72,7 +72,7 @@ export function createGame(io: IOServer, gameId: string, onGameEnd: () => void) 
         }
       }
 
-      io.to(gameId).emit("gameState", { ...gameState }); // Emit to all sockets in the room
+      namespace.emit("gameState", { ...gameState }); // Emit to all sockets in the namespace
     });
 
     // Handle new answers
@@ -103,7 +103,7 @@ export function createGame(io: IOServer, gameId: string, onGameEnd: () => void) 
       gameState.prompt = "What's the deal with airplane food?";
       gameState.timeEnd = Date.now() + ANSWER_TIME; // 60 seconds from now
 
-      io.to(gameId).emit("gameState", { ...gameState });
+      namespace.emit("gameState", { ...gameState });
 
       // Start a 60-second timer
       answerTimer = global.setTimeout(progressGame, ANSWER_TIME);
@@ -185,7 +185,7 @@ export function createGame(io: IOServer, gameId: string, onGameEnd: () => void) 
         }
 
         // Emit the final game state
-        io.to(gameId).emit("gameState", gameState);
+        namespace.emit("gameState", gameState);
 
         // Remove the game from the games object after a delay
         setTimeout(() => {
@@ -205,7 +205,7 @@ export function createGame(io: IOServer, gameId: string, onGameEnd: () => void) 
         }
       }
 
-      io.to(gameId).emit("gameState", gameState);
+      namespace.emit("gameState", gameState);
     }
   }
 
