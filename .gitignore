@@ -69,7 +69,6 @@ dist
 
 # react / gatsby 
 .cache/
-public
 
 # Mac files
 .DS_Store
