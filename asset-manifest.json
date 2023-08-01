@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ekimbox/static/css/main.1eb9ac7e.css",
+    "main.js": "/ekimbox/static/js/main.bb1dac1d.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/ekimbox/static/js/787.c4e7f8f9.chunk.js",
+    "index.html": "/ekimbox/index.html",
+    "main.1eb9ac7e.css.map": "/ekimbox/static/css/main.1eb9ac7e.css.map",
+    "main.bb1dac1d.js.map": "/ekimbox/static/js/main.bb1dac1d.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/ekimbox/static/js/787.c4e7f8f9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1eb9ac7e.css",
+    "static/js/main.bb1dac1d.js"
+  ]
+}
