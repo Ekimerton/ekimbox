@@ -81,10 +81,6 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-div {
-
-}
-
 h1 {
   font-size: 2rem;
   text-align: center;
@@ -234,7 +230,7 @@ input {
 }
 
 .frosted-glass {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.2);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
@@ -257,8 +253,8 @@ input {
 
 .funky-background {
   --s: 200px; /* control the size */
-  --c1: #fffd83;
-  --c2: #fff12a;
+  --c1: #72a5e7;
+  --c2: #acd6ff;
   
   --_s: calc(2*var(--s)) calc(2*var(--s));
   --_g: var(--_s) conic-gradient(at 40% 40%,#0000 75%,var(--c1) 0);

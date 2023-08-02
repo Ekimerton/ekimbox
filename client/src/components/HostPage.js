@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PlayerView from "./PlayerView";
 import JoinCodeBox from "./JoinCodeBox";
+import TipBox from "./TipBox";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { message } from "antd";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-// const BASE_URL = "http://localhost:3000";
+//const BASE_URL = "https://ekimbox-server.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 function HostPage() {
   const { gameId } = useParams();
@@ -102,7 +103,7 @@ function HostPage() {
             </div>
           )}
         </div>
-        <div />
+        <TipBox />
       </div>
     </>
   );

@@ -1,0 +1,24 @@
+@keyframes border-retract {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+.animated-border {
+  position: relative;
+  overflow: hidden; /* Ensure the border doesn't extend beyond the card */
+}
+
+.animated-border::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background-color: black;
+  animation: border-retract 10s infinite;
+}
