@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // You can use any library to make HTTP requests
 
-// const BASE_URL = "https://ekimbox-server.onrender.com";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://ekimbox-server.onrender.com";
+// const BASE_URL = "http://localhost:3000";
 
 function LandingPage() {
   const [gameIdInput, setGameIdInput] = useState("");
