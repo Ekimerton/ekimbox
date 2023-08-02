@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Timer from "./Timer";
 import RegisterView from "./RegisterView";
-import ScoreView from "./ScoreView";
+import PlayerView from "./PlayerView";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "react-router-dom";
+
+// const BASE_URL = "https://ekimbox-server.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 function ControllerPage() {
   const [name, setName] = useState("");
@@ -16,16 +19,27 @@ function ControllerPage() {
   const socketRef = useRef();
   const { gameId } = useParams();
 
+  // Check if the client already has an ID in local storage
+  let clientId = localStorage.getItem("clientId");
+
+  // If not, generate a new ID and store it in local storage
+  if (!clientId) {
+    clientId = uuidv4();
+    localStorage.setItem("clientId", clientId);
+  }
+
   useEffect(() => {
-    socketRef.current = io(
-      `https://ekimbox-server.onrender.com/game/${gameId}`
-    );
+    socketRef.current = io(`${BASE_URL}/game/${gameId}`);
 
     socketRef.current.on("connect", () => {
       setConnected(true);
     });
     socketRef.current.on("gameState", (newGameState) => {
       setGameState(newGameState);
+      console.log(newGameState);
+      setName(
+        newGameState.players.find((player) => player.id === clientId)?.name
+      );
     });
     socketRef.current.on("disconnect", () => setConnected(false));
     socketRef.current.emit("ready");
@@ -36,16 +50,7 @@ function ControllerPage() {
       socketRef.current.off("disconnect");
       socketRef.current.close();
     };
-  }, [gameId]);
-
-  // Check if the client already has an ID in local storage
-  let clientId = localStorage.getItem("clientId");
-
-  // If not, generate a new ID and store it in local storage
-  if (!clientId) {
-    clientId = uuidv4();
-    localStorage.setItem("clientId", clientId);
-  }
+  }, [gameId, clientId]);
 
   const handleRegister = useCallback(() => {
     if (
@@ -112,9 +117,7 @@ function ControllerPage() {
             <button>{gameState.comparisonPairs[gameState.subStage][1]}</button>
           </>
         )}
-        {gameState.stage === "score" && (
-          <ScoreView gameState={gameState} clientId={clientId} />
-        )}
+        {gameState.stage === "score" && <PlayerView gameState={gameState} />}
         {gameState.stage === "end" && <p>Thanks for playing!</p>}
       </div>
     </div>

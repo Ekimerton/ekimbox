@@ -10,6 +10,10 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+    color: #f0f0f0;
+    background-color: #2a2a2a;
+    padding: 8px;
+    border-radius: 4px;
 }
 
 /*
@@ -78,8 +82,7 @@ body {
 }
 
 div {
-  display: flex;
-  flex-direction: column;
+
 }
 
 h1 {
@@ -121,13 +124,14 @@ a:active  {
 }
 
 button {
-  width: 200px;
-  margin-bottom: 8px;
   margin-top: 8px;
+  width: 100%;
+  max-width: 400px;
 }
 
 input {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
 }
 
 #root {
@@ -137,8 +141,11 @@ input {
 
 .column-view {
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 16px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
@@ -146,6 +153,37 @@ input {
   max-width: 800px;
   padding: 48px;
   justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 48px;
+  justify-content: center;
+  
+}
+
+.host-container p {
+  font-size: 1.2rem;
+}
+
+.host-container h1 {
+  font-size: 3rem;
+}
+
+.host-container h2 {
+  font-size: 2rem;
+}
+
+.host-container h3 {
+  font-size: 1.5rem;
+}
+
+.host-container h4 {
+  font-size: 1.2rem;
 }
 
 @media only screen and (max-width: 800px) {
@@ -168,8 +206,19 @@ input {
 
 .card {
   padding: 16px;
+  margin: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.max-width {
+  width: 100%;
 }
 
 .propic {
@@ -207,7 +256,7 @@ input {
 }
 
 .funky-background {
-  --s: 140px; /* control the size */
+  --s: 200px; /* control the size */
   --c1: #fffd83;
   --c2: #fff12a;
   
