@@ -17,15 +17,9 @@ function RegisterView({
       />
       <button onClick={handleRegister}>Set Name</button>
 
-      <button
-        onClick={handleStartGame}
-        disabled={!gameState.vipID || gameState.vipID !== clientId}
-      >
-        Start Game
-      </button>
-      <h3>Players</h3>
-      {gameState.players &&
-        gameState.players.map((player) => <p key={player.id}>{player.name}</p>)}
+      {gameState.vipID && gameState.vipID === clientId && (
+        <button onClick={handleStartGame}>Start Game</button>
+      )}
     </>
   );
 }

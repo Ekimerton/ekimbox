@@ -3,10 +3,14 @@ import "./TipBox.css"; // assuming the CSS is in this file
 
 const tips = [
   "Turn up your volume for the best experience!",
-  "You can play on your phone or computer by going to ekimbox.vercel.app",
+  "You can play on your phone or computer by going to https://ekimbox.vercel.app",
   "Share your screen with your friends on Facetime or Discord!",
   "Full screen your browser with F11 on Windows or Cmd+Shift+F on Mac",
   "Game made by Ekim Karabey",
+  "Got feedback? Email me at ekim0252@gmail.com",
+  "Might be a good idea to turn off your phone's auto-lock",
+  "Make sure to plug in your host computer!",
+  "Text too small? Zoom in with Ctrl+Plus on Windows or Cmd+Plus on Mac",
 ];
 
 function TipBox() {

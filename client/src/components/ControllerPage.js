@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Timer from "./Timer";
-import RegisterView from "./RegisterView";
+import RegisterView from "./controller/RegisterView";
 import PlayerView from "./PlayerView";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "react-router-dom";
+import "./ControllerPage.css";
+import ControllerHeader from "./controller/ControllerHeader";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -38,7 +40,8 @@ function ControllerPage() {
       setGameState(newGameState);
       console.log(newGameState);
       setName(
-        newGameState.players.find((player) => player.id === clientId)?.name
+        newGameState.players.find((player) => player.id === clientId)?.name ||
+          ""
       );
     });
     socketRef.current.on("disconnect", () => setConnected(false));
@@ -51,6 +54,10 @@ function ControllerPage() {
       socketRef.current.close();
     };
   }, [gameId, clientId]);
+
+  const currentPlayer = gameState.players?.find(
+    (player) => player.id === clientId
+  );
 
   const handleRegister = useCallback(() => {
     if (
@@ -85,40 +92,57 @@ function ControllerPage() {
   }
 
   return (
-    <div className="column-view">
-      <div className="container">
-        <p>{connected ? "Connected" : "Lost Connection"}</p>
-        {gameState.timeEnd && <Timer timeEnd={gameState.timeEnd} />}
-        {/*<pre>JSON.stringify(gameState, null, 4)</pre>*/}
-        {gameState.stage === "register" && (
-          <RegisterView
-            name={name}
-            setName={setName}
-            handleRegister={handleRegister}
-            handleStartGame={handleStartGame}
-            gameState={gameState}
-            clientId={clientId}
-          />
-        )}
-        {gameState.stage === "answer" && (
-          <>
-            <p>{gameState.prompt}</p>
-            <input
-              type="text"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
+    <div className="column-view controller-page">
+      <div className="mobile-container frosted-glass">
+        <ControllerHeader
+          name={currentPlayer ? currentPlayer.name : ""}
+          timeEnd={gameState.timeEnd}
+        />
+        <div
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {gameState.stage === "register" && (
+            <RegisterView
+              name={name}
+              setName={setName}
+              handleRegister={handleRegister}
+              handleStartGame={handleStartGame}
+              gameState={gameState}
+              clientId={clientId}
             />
-            <button onClick={handleAnswer}>Submit Answer</button>
-          </>
-        )}
-        {gameState.stage === "vote" && (
-          <>
-            <button>{gameState.comparisonPairs[gameState.subStage][0]}</button>
-            <button>{gameState.comparisonPairs[gameState.subStage][1]}</button>
-          </>
-        )}
-        {gameState.stage === "score" && <PlayerView gameState={gameState} />}
-        {gameState.stage === "end" && <p>Thanks for playing!</p>}
+          )}
+          {gameState.stage === "answer" && (
+            <>
+              <p>{gameState.prompt}</p>
+              <input
+                type="text"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+              <button onClick={handleAnswer}>Submit Answer</button>
+            </>
+          )}
+          {gameState.stage === "vote" && (
+            <>
+              <button>
+                {gameState.comparisonPairs[gameState.subStage][0]}
+              </button>
+              <button>
+                {gameState.comparisonPairs[gameState.subStage][1]}
+              </button>
+            </>
+          )}
+          {gameState.stage === "score" && <PlayerView gameState={gameState} />}
+          {gameState.stage === "end" && <p>Thanks for playing!</p>}
+        </div>
+        <div>
+          <p>Footer shit</p>
+        </div>
       </div>
     </div>
   );
