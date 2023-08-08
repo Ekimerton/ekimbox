@@ -1,163 +1,146 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createGame = exports.BUFFER_TIME = exports.SCORE_TIME = exports.VOTE_TIME = exports.ANSWER_TIME = exports.MAX_PLAYERS = exports.MIN_PLAYERS = exports.MAX_ROUNDS = void 0;
+exports.createGame = void 0;
 const utils_1 = require("./utils");
-exports.MAX_ROUNDS = 3;
-exports.MIN_PLAYERS = 4;
-exports.MAX_PLAYERS = 10;
-exports.ANSWER_TIME = 60 * 1000; // seconds
-exports.VOTE_TIME = 30 * 1000; // seconds
-exports.SCORE_TIME = 10 * 1000; // seconds
-exports.BUFFER_TIME = 0 * 1000; // seconds
+const MAX_ROUNDS = 2;
+const MIN_PLAYERS = 2;
+const MAX_PLAYERS = 8;
+const QUESTIONS_PER_PLAYER = 2;
+const ANSWER_TIME = 60 * 1000;
+const VOTE_TIME = 15 * 1000;
+const SCORE_TIME = 10 * 1000;
+const BUFFER_TIME = 3 * 1000;
 function createGame(namespace, gameId, onGameEnd) {
     let gameState = {
         round: 0,
         stage: "register",
         subStage: 0,
-        prompt: "Waiting for host to start the game...",
-        answers: {},
-        comparisonPairs: [],
         players: [],
+        questions: [],
     };
     let answerTimer = null;
     namespace.on("connection", (socket) => {
         namespace.emit("gameState", Object.assign({}, gameState));
-        // Handle player registration
-        socket.on("register", (data) => {
-            // Check if the name is already in use
-            if (gameState.players.some((player) => player.name === data.name)) {
-                // If the name is already in use, send an error message to the client
-                socket.emit("error", "This name is already in use. Please choose a different name.");
-                return;
+        socket.on("register", ({ id, name }) => {
+            if (!gameState.players) {
+                gameState.players = [];
             }
-            let player = gameState.players.find((player) => player.id === data.id);
-            if (player) {
-                // If the player is already registered, update their name
-                player.name = data.name;
+            const existingPlayer = gameState.players.find(player => player.id === id);
+            if (existingPlayer) {
+                existingPlayer.name = name;
             }
             else {
-                // If the player is not already registered, add them to the players object
-                player = { id: data.id, name: data.name, score: 0 };
-                gameState.players.push(player);
-                // If this is the first player to register, make them the VIP
-                if (!gameState.vipID) {
-                    gameState.vipID = player.id;
+                const newPlayer = {
+                    id: id,
+                    name: name,
+                    score: 0,
+                };
+                gameState.players.push(newPlayer);
+                // Make the first player the VIP
+                if (gameState.players.length === 1) {
+                    gameState.vipID = id;
                 }
             }
-            namespace.emit("gameState", Object.assign({}, gameState)); // Emit to all sockets in the namespace
+            namespace.emit("gameState", gameState); // Broadcast updated game state
         });
-        // Handle new answers
-        socket.on("newAnswer", (data) => {
-            // Check if the player has already submitted an answer
-            let player = gameState.players.find((player) => player.id === data.userId);
-            if (gameState.answers[data.userId]) {
+        socket.on("startGame", (clientId) => {
+            if (gameState.stage !== "register") {
+                socket.emit("error", "Game has already started or is not in registration phase.");
                 return;
             }
-            // Add the answer to the gameState
-            gameState.answers[data.userId] = data.answer;
-            progressGame();
-        });
-        // Handle start game
-        socket.on("startGame", (clientId) => {
-            // Check if the player is the VIP
+            if (gameState.players.length < MIN_PLAYERS) {
+                socket.emit("error", `At least ${MIN_PLAYERS} players are needed to start the game.`);
+                return;
+            }
             if (clientId !== gameState.vipID) {
                 socket.emit("error", "Only the VIP can start the game.");
                 return;
             }
-            // Start the game
             gameState.round = 1;
-            gameState.stage = "answer";
-            gameState.prompt = "What's the deal with airplane food?";
-            gameState.timeEnd = Date.now() + exports.ANSWER_TIME; // 60 seconds from now
-            namespace.emit("gameState", Object.assign({}, gameState));
-            // Start a 60-second timer
-            answerTimer = global.setTimeout(progressGame, exports.ANSWER_TIME);
+            startAnswerPhase();
         });
-        socket.on("disconnect", () => {
-            // Handle disconnection, e.g., by removing the player from the game state
-            // ...
-        });
-        // Handle client ready
-        socket.on("ready", () => {
-            // Send the game state to the client
-            socket.emit("gameState", Object.assign({}, gameState));
-        });
-    });
-    function progressGame() {
-        // If all players have submitted an answer or the timer has expired
-        if (gameState.players.every((player) => gameState.answers[player.id]) ||
-            (gameState.timeEnd && Date.now() > gameState.timeEnd)) {
-            if (answerTimer) {
-                global.clearTimeout(answerTimer);
-                answerTimer = null;
-            }
-            // If it's the answer stage, advance to the vote stage
-            if (gameState.stage === "answer") {
-                // Check if any player has not submitted an answer and assign them 'Blank Answer'
-                for (const player of gameState.players) {
-                    if (!gameState.answers[player.id]) {
-                        gameState.answers[player.id] = "Blank Answer";
-                    }
-                }
-                gameState.stage = "vote";
-                gameState.subStage = 0;
-                gameState.comparisonPairs = utils_1.getComparisonPairs(gameState.answers);
-                gameState.timeEnd = Date.now() + exports.VOTE_TIME;
-                // Start a VOTE_TIME-second timer for the vote stage
-                answerTimer = global.setTimeout(progressGame, exports.VOTE_TIME + exports.BUFFER_TIME);
-            }
-            // If it's the vote stage, advance to the next vote sub-stage or the display score stage
-            else if (gameState.stage === "vote") {
-                gameState.subStage++;
-                // If all pairs have been voted on, advance to the display score stage
-                if (gameState.subStage >= gameState.comparisonPairs.length) {
-                    gameState.stage = "score";
-                    gameState.timeEnd = Date.now() + exports.SCORE_TIME; // SCORE_TIME seconds from now for score
-                    // Display the score for a certain amount of time before advancing to the next round
-                    answerTimer = global.setTimeout(progressGame, exports.SCORE_TIME + exports.BUFFER_TIME);
-                }
-                // If not all pairs have been voted on, start a timer for the next vote sub-stage
-                else {
-                    gameState.timeEnd = Date.now() + exports.VOTE_TIME; // VOTE_TIME seconds from now for vote
-                    answerTimer = global.setTimeout(progressGame, exports.VOTE_TIME + exports.BUFFER_TIME); // VOTE_TIME seconds
-                }
-            }
-            // If it's the display score stage, advance to the next round or end the game
-            else if (gameState.stage === "score") {
-                gameState.round++;
-                // If the maximum number of rounds has been reached, end the game
-                if (gameState.round > exports.MAX_ROUNDS) {
-                    gameState.timeEnd = undefined;
-                    gameState.stage = "end";
-                    gameState.prompt = "Game has ended. Thanks for playing!";
-                    // Clear any existing timers
-                    if (answerTimer) {
-                        global.clearTimeout(answerTimer);
-                        answerTimer = null;
-                    }
-                    // Emit the final game state
-                    namespace.emit("gameState", gameState);
-                    // Remove the game from the games object after a delay
-                    setTimeout(() => {
-                        onGameEnd();
-                    }, 5000); // 5 seconds delay
-                }
-                // If the maximum number of rounds has not been reached, advance to the next answer stage
-                else {
-                    gameState.stage = "answer";
-                    gameState.timeEnd = Date.now() + exports.ANSWER_TIME; // ANSWER_TIME seconds from now for answer
-                    answerTimer = global.setTimeout(progressGame, exports.ANSWER_TIME + exports.BUFFER_TIME); // ANSWER_TIME seconds
-                    gameState.answers = {};
+        socket.on("submitAnswer", (answerData) => {
+            var _a;
+            const question = (_a = gameState.questions) === null || _a === void 0 ? void 0 : _a.find(q => q.prompt === answerData.prompt);
+            if (question) {
+                const playerAnswer = question.answers.find(a => a.player === answerData.clientId);
+                if (playerAnswer) {
+                    playerAnswer.answer = answerData.answer;
                 }
             }
             namespace.emit("gameState", gameState);
+        });
+        socket.on("vote", (voteData) => {
+            // Implement your voting logic here
+        });
+        socket.on("disconnect", () => {
+            // Handle player disconnect if needed
+        });
+    });
+    function startAnswerPhase() {
+        gameState.stage = "answer";
+        const totalPromptsNeeded = gameState.players.length * (QUESTIONS_PER_PLAYER / 2); // 2 players per question
+        const allPrompts = utils_1.getQuestions(totalPromptsNeeded);
+        gameState.questions = [];
+        for (let i = 0; i < totalPromptsNeeded; i++) {
+            const player1Id = gameState.players[i % gameState.players.length].id;
+            const player2Id = gameState.players[(i + 1) % gameState.players.length].id; // Wrap around to the start if needed
+            gameState.questions.push({
+                prompt: allPrompts[i],
+                answers: [
+                    { player: player1Id, answer: "Blank Answer" },
+                    { player: player2Id, answer: "Blank Answer" }
+                ]
+            });
         }
+        gameState.timeEnd = Date.now() + ANSWER_TIME;
+        namespace.emit("gameState", Object.assign({}, gameState));
+        answerTimer = global.setTimeout(progressGame, ANSWER_TIME + BUFFER_TIME);
     }
-    return {
-        addPlayer: (playerId) => {
-            // Add the player to the game
-        },
-        // ... any other methods or properties you want to expose ...
-    };
+    function progressGame() {
+        if (answerTimer) {
+            global.clearTimeout(answerTimer);
+            answerTimer = null;
+        }
+        switch (gameState.stage) {
+            case "answer":
+                startVotePhase();
+                break;
+            case "vote":
+                gameState.subStage++;
+                gameState.timeEnd = Date.now() + VOTE_TIME;
+                answerTimer = global.setTimeout(progressGame, VOTE_TIME + BUFFER_TIME);
+                if (gameState.subStage >= gameState.questions.length) {
+                    startScorePhase();
+                }
+                break;
+            case "score":
+                gameState.round++;
+                if (gameState.round <= MAX_ROUNDS) {
+                    startAnswerPhase();
+                }
+                else {
+                    endGame();
+                }
+                break;
+        }
+        namespace.emit("gameState", gameState);
+    }
+    function startVotePhase() {
+        gameState.stage = "vote";
+        gameState.subStage = 0; // Reset subStage for voting
+        gameState.timeEnd = Date.now() + VOTE_TIME;
+        answerTimer = global.setTimeout(progressGame, VOTE_TIME + BUFFER_TIME);
+    }
+    function startScorePhase() {
+        gameState.stage = "score";
+        gameState.timeEnd = Date.now() + SCORE_TIME;
+        answerTimer = global.setTimeout(progressGame, SCORE_TIME + BUFFER_TIME);
+    }
+    function endGame() {
+        gameState.stage = "end";
+        onGameEnd();
+    }
+    return {};
 }
 exports.createGame = createGame;

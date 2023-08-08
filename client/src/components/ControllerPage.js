@@ -14,6 +14,7 @@ const BASE_URL = "https://ekimbox-server.onrender.com";
 function ControllerPage() {
   const [name, setName] = useState("");
   const [gameState, setGameState] = useState({});
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [answer, setAnswer] = useState("");
   const [vote, setVote] = useState("");
   const [connected, setConnected] = useState(false);
@@ -37,6 +38,7 @@ function ControllerPage() {
       setConnected(true);
     });
     socketRef.current.on("gameState", (newGameState) => {
+      console.log("gameState", newGameState);
       setGameState(newGameState);
       console.log(newGameState);
       setName(
@@ -44,7 +46,9 @@ function ControllerPage() {
           ""
       );
     });
+
     socketRef.current.on("disconnect", () => setConnected(false));
+    socketRef.current.on("error", (error) => console.error(error));
     socketRef.current.emit("ready");
 
     return () => {
@@ -58,6 +62,11 @@ function ControllerPage() {
   const currentPlayer = gameState.players?.find(
     (player) => player.id === clientId
   );
+
+  const myPrompts =
+    gameState.questions
+      ?.filter((q) => q.answers.some((answer) => answer.player === clientId))
+      .map((q) => q.prompt) || [];
 
   const handleRegister = useCallback(() => {
     if (
@@ -73,10 +82,18 @@ function ControllerPage() {
     socketRef.current.emit("register", { id: clientId, name: name });
   }, [gameState.players, name, clientId]);
 
-  const handleAnswer = useCallback(() => {
-    socketRef.current.emit("newAnswer", { userId: clientId, answer });
-    setAnswer("");
-  }, [clientId, answer]);
+  const handleAnswerSubmit = () => {
+    if (answer) {
+      socketRef.current.emit("submitAnswer", {
+        clientId: clientId,
+        prompt: myPrompts[currentPromptIndex],
+        answer: answer,
+      });
+      // Reset the selected answer and move to the next prompt
+      setAnswer("");
+      setCurrentPromptIndex((prevIndex) => prevIndex + 1);
+    }
+  };
 
   const handleVote = useCallback(() => {
     socketRef.current.emit("newVote", { userId: clientId, vote });
@@ -118,30 +135,37 @@ function ControllerPage() {
           )}
           {gameState.stage === "answer" && (
             <>
-              <p>{gameState.prompt}</p>
+              <p>{myPrompts[currentPromptIndex]}</p>
               <input
                 type="text"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
               />
-              <button onClick={handleAnswer}>Submit Answer</button>
+              <button onClick={handleAnswerSubmit}>Submit Answer</button>
             </>
           )}
           {gameState.stage === "vote" && (
-            <>
-              <button>
-                {gameState.comparisonPairs[gameState.subStage][0]}
-              </button>
-              <button>
-                {gameState.comparisonPairs[gameState.subStage][1]}
-              </button>
-            </>
+            <div>
+              <h2>
+                Question: {gameState.questions[gameState.subStage]?.prompt}
+              </h2>
+              {gameState.questions[gameState.subStage]?.answers.map(
+                (answerOption, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setVote(answerOption.answer)}
+                  >
+                    {answerOption.answer}
+                  </button>
+                )
+              )}
+            </div>
           )}
           {gameState.stage === "score" && <PlayerView gameState={gameState} />}
           {gameState.stage === "end" && <p>Thanks for playing!</p>}
         </div>
         <div>
-          <p>Footer shit</p>
+          <p>Footer section</p>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const Timer = ({ timeEnd }) => {
     return () => clearInterval(timer);
   }, [timeEnd]);
 
-  return <p> [ {remainingTime} ]</p>;
+  return <p style={{ textAlign: "center" }}> [ {remainingTime} ]</p>;
 };
 
 export default Timer;
