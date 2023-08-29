@@ -6,7 +6,7 @@ const PlayerAnswerCard = ({
   answer,
   avatarFirst = true,
   avatarVisible = false,
-  numVotes = 2,
+  numVotes = 0,
 }) => {
   const voteCircles = Array.from({ length: numVotes }).map((_, idx) => (
     <div key={idx} style={voteCircleStyle}></div>

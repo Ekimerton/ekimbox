@@ -20,11 +20,13 @@ function AnswerCard({ question, answers, timeEnd }) {
         <PlayerAnswerCard
           answer={answers[0].answer}
           player={answers[0].player}
+          numVotes={answers[0].votes.length}
         />
         <h4 style={{ margin: 4 }}>VS</h4>
         <PlayerAnswerCard
           answer={answers[1].answer}
           player={answers[1].player}
+          numVotes={answers[1].votes.length}
           avatarFirst={false}
         />
       </div>
