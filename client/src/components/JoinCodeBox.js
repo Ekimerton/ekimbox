@@ -16,7 +16,7 @@ function ScoreView({ gameID }) {
           Room Code: <code>{gameID}</code>
         </p>
       </div>
-      <p style={{ textAlign: "center", paddingTop: 4 }}>
+      <p style={{ textAlign: "center", paddingTop: 4, paddingBottom: 0 }}>
         https://ekimbox.vercel.app
       </p>
     </div>

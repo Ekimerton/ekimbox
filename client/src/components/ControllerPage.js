@@ -8,8 +8,8 @@ import { useParams } from "react-router-dom";
 import "./ControllerPage.css";
 import ControllerHeader from "./controller/ControllerHeader";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-// const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://ekimbox-server.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 function ControllerPage() {
   const [name, setName] = useState("");
@@ -39,8 +39,12 @@ function ControllerPage() {
     });
     socketRef.current.on("gameState", (newGameState) => {
       console.log("gameState", newGameState);
+
+      if (newGameState.stage === "score") {
+        setCurrentPromptIndex(0);
+      }
+
       setGameState(newGameState);
-      console.log(newGameState);
       setName(
         newGameState.players.find((player) => player.id === clientId)?.name ||
           ""
@@ -84,7 +88,7 @@ function ControllerPage() {
 
   const handleAnswerSubmit = () => {
     if (answer) {
-      socketRef.current.emit("submitAnswer", {
+      socketRef.current.emit("answer", {
         clientId: clientId,
         prompt: myPrompts[currentPromptIndex],
         answer: answer,
@@ -95,10 +99,13 @@ function ControllerPage() {
     }
   };
 
-  const handleVote = useCallback(() => {
-    socketRef.current.emit("newVote", { userId: clientId, vote });
-    setVote("");
-  }, [clientId, vote]);
+  const handleVote = (answerOption) => {
+    socketRef.current.emit("vote", {
+      clientId: clientId,
+      questionPrompt: gameState.questions[gameState.subStage]?.prompt,
+      votedFor: answerOption.player.id,
+    });
+  };
 
   const handleStartGame = useCallback(() => {
     socketRef.current.emit("startGame", clientId);
@@ -151,10 +158,7 @@ function ControllerPage() {
               </h2>
               {gameState.questions[gameState.subStage]?.answers.map(
                 (answerOption, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setVote(answerOption.answer)}
-                  >
+                  <button key={index} onClick={() => handleVote(answerOption)}>
                     {answerOption.answer}
                   </button>
                 )

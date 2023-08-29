@@ -7,7 +7,7 @@ const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 8;
 const QUESTIONS_PER_PLAYER = 2;
 const ANSWER_TIME = 60 * 1000;
-const VOTE_TIME = 15 * 1000;
+const VOTE_TIME = 1500 * 1000;
 const SCORE_TIME = 10 * 1000;
 const BUFFER_TIME = 3 * 1000;
 function createGame(namespace, gameId, onGameEnd) {
@@ -25,7 +25,7 @@ function createGame(namespace, gameId, onGameEnd) {
             if (!gameState.players) {
                 gameState.players = [];
             }
-            const existingPlayer = gameState.players.find(player => player.id === id);
+            const existingPlayer = gameState.players.find((player) => player.id === id);
             if (existingPlayer) {
                 existingPlayer.name = name;
             }
@@ -59,15 +59,47 @@ function createGame(namespace, gameId, onGameEnd) {
             gameState.round = 1;
             startAnswerPhase();
         });
-        socket.on("submitAnswer", (answerData) => {
+        socket.on("answer", (answerData) => {
             var _a;
             const question = (_a = gameState.questions) === null || _a === void 0 ? void 0 : _a.find(q => q.prompt === answerData.prompt);
             if (question) {
-                const playerAnswer = question.answers.find(a => a.player === answerData.clientId);
+                const playerAnswer = question.answers.find(a => a.player.id === answerData.clientId);
                 if (playerAnswer) {
                     playerAnswer.answer = answerData.answer;
                 }
             }
+            namespace.emit("gameState", gameState);
+        });
+        socket.on("vote", (voteData) => {
+            const { userId, vote } = voteData;
+            // Find the player who made the vote.
+            const votingPlayer = gameState.players.find((player) => player.id === userId);
+            if (!votingPlayer) {
+                console.error("Voting player not found!");
+                return;
+            }
+            // Find the question being voted on.
+            const question = gameState.questions[gameState.subStage];
+            if (!question) {
+                console.error("Question for voting not found!");
+                return;
+            }
+            // Check if this player has already voted for another answer in this question.
+            // If so, remove their previous vote.
+            question.answers.forEach((answer) => {
+                const index = answer.votes.findIndex((player) => player.id === userId);
+                if (index !== -1) {
+                    answer.votes.splice(index, 1);
+                }
+            });
+            // Find the answer being voted on and add the vote.
+            const votedAnswer = question.answers.find((answer) => answer.answer === vote);
+            if (!votedAnswer) {
+                console.error("Voted answer not found!");
+                return;
+            }
+            votedAnswer.votes.push(votingPlayer);
+            // Broadcast the updated gameState to all clients.
             namespace.emit("gameState", gameState);
         });
         socket.on("vote", (voteData) => {
@@ -77,26 +109,6 @@ function createGame(namespace, gameId, onGameEnd) {
             // Handle player disconnect if needed
         });
     });
-    function startAnswerPhase() {
-        gameState.stage = "answer";
-        const totalPromptsNeeded = gameState.players.length * (QUESTIONS_PER_PLAYER / 2); // 2 players per question
-        const allPrompts = utils_1.getQuestions(totalPromptsNeeded);
-        gameState.questions = [];
-        for (let i = 0; i < totalPromptsNeeded; i++) {
-            const player1Id = gameState.players[i % gameState.players.length].id;
-            const player2Id = gameState.players[(i + 1) % gameState.players.length].id; // Wrap around to the start if needed
-            gameState.questions.push({
-                prompt: allPrompts[i],
-                answers: [
-                    { player: player1Id, answer: "Blank Answer" },
-                    { player: player2Id, answer: "Blank Answer" }
-                ]
-            });
-        }
-        gameState.timeEnd = Date.now() + ANSWER_TIME;
-        namespace.emit("gameState", Object.assign({}, gameState));
-        answerTimer = global.setTimeout(progressGame, ANSWER_TIME + BUFFER_TIME);
-    }
     function progressGame() {
         if (answerTimer) {
             global.clearTimeout(answerTimer);
@@ -108,10 +120,13 @@ function createGame(namespace, gameId, onGameEnd) {
                 break;
             case "vote":
                 gameState.subStage++;
-                gameState.timeEnd = Date.now() + VOTE_TIME;
-                answerTimer = global.setTimeout(progressGame, VOTE_TIME + BUFFER_TIME);
                 if (gameState.subStage >= gameState.questions.length) {
                     startScorePhase();
+                }
+                else {
+                    gameState.timeEnd = Date.now() + VOTE_TIME;
+                    namespace.emit("gameState", gameState);
+                    answerTimer = global.setTimeout(progressGame, VOTE_TIME + BUFFER_TIME);
                 }
                 break;
             case "score":
@@ -124,22 +139,45 @@ function createGame(namespace, gameId, onGameEnd) {
                 }
                 break;
         }
-        namespace.emit("gameState", gameState);
+    }
+    function startAnswerPhase() {
+        gameState.stage = "answer";
+        const totalPromptsNeeded = gameState.players.length * (QUESTIONS_PER_PLAYER / 2); // 2 players per question
+        const allPrompts = utils_1.getQuestions(totalPromptsNeeded);
+        gameState.questions = [];
+        for (let i = 0; i < totalPromptsNeeded; i++) {
+            const player1Id = gameState.players[i % gameState.players.length].id;
+            const player2Id = gameState.players[(i + 1) % gameState.players.length].id; // Wrap around to the start if needed
+            gameState.questions.push({
+                prompt: allPrompts[i],
+                answers: [
+                    { player: gameState.players.find(p => p.id === player1Id), answer: "Blank Answer", votes: [] },
+                    { player: gameState.players.find(p => p.id === player2Id), answer: "Blank Answer", votes: [] }
+                ]
+            });
+        }
+        gameState.timeEnd = Date.now() + ANSWER_TIME;
+        namespace.emit("gameState", Object.assign({}, gameState));
+        answerTimer = global.setTimeout(progressGame, ANSWER_TIME + BUFFER_TIME);
     }
     function startVotePhase() {
         gameState.stage = "vote";
         gameState.subStage = 0; // Reset subStage for voting
         gameState.timeEnd = Date.now() + VOTE_TIME;
+        namespace.emit("gameState", gameState);
         answerTimer = global.setTimeout(progressGame, VOTE_TIME + BUFFER_TIME);
     }
     function startScorePhase() {
         gameState.stage = "score";
         gameState.timeEnd = Date.now() + SCORE_TIME;
+        namespace.emit("gameState", gameState);
         answerTimer = global.setTimeout(progressGame, SCORE_TIME + BUFFER_TIME);
     }
     function endGame() {
         gameState.stage = "end";
-        onGameEnd();
+        namespace.emit("gameState", gameState);
+        // Call onGameEnd() after 5 seconds
+        global.setTimeout(onGameEnd, 5000);
     }
     return {};
 }

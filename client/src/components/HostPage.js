@@ -6,9 +6,13 @@ import Timer from "./Timer";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
 import { message } from "antd";
+import RegisterCard from "./host/RegisterCard";
+import PromptCard from "./host/PromptCard";
+import PlayerAnswerCard from "./host/PlayerAnswerCard";
+import AnswerCard from "./host/AnswerCard";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-//const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://ekimbox-server.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 function HostPage() {
   const { gameId } = useParams();
@@ -60,40 +64,23 @@ function HostPage() {
       <div className="funky-background column-view">
         {contextHolder}
         <JoinCodeBox gameID={gameId} />
+
         <div className="container host-container">
           {gameState.stage === "register" && (
-            <>
-              <div className="card frosted-glass max-width">
-                <p>Waiting for the VIP player to start the game...</p>
-                <PlayerView gameState={gameState} />
-              </div>
-            </>
+            <RegisterCard gameState={gameState} />
           )}
           {gameState.stage === "answer" && (
-            <>
-              <div className="card frosted-glass max-width">
-                <Timer timeEnd={gameState.timeEnd} />
-                <h2>
-                  Answer your questions according to the prompt on your device.
-                </h2>
-              </div>
-            </>
+            <PromptCard timeEnd={gameState.timeEnd}>
+              <h2>Sending prompts to your devices... now!</h2>
+              <p>Now's time to let out your inner Mark Twain.</p>
+            </PromptCard>
           )}
           {gameState.stage === "vote" && (
-            <div className="card frosted-glass">
-              <Timer timeEnd={gameState.timeEnd} />
-              <h2>
-                Question: {gameState.questions[gameState.subStage].prompt}
-              </h2>
-              {gameState.questions[gameState.subStage].answers.map(
-                (answerOption, index) => (
-                  <div key={index}>
-                    <h3>{answerOption.answer}</h3>
-                    <p>{answerOption.player}</p>
-                  </div>
-                )
-              )}
-            </div>
+            <AnswerCard
+              question={gameState.questions[gameState.subStage].prompt}
+              answers={gameState.questions[gameState.subStage].answers}
+              timeEnd={gameState.timeEnd}
+            />
           )}
           {gameState.stage === "score" && (
             <>
@@ -104,20 +91,23 @@ function HostPage() {
             </>
           )}
           {gameState.stage === "end" && (
-            <div className="card frosted-glass max-width">
-              <h3>Thanks for playing!</h3>
+            <PromptCard>
+              <h2>Thanks for playing!</h2>
               <p>
                 This server will shut down now that the game has finished. You
                 can start a new game by going to the{" "}
                 <a href="https://ekimbox.vercel.app">home page</a>.
               </p>
-            </div>
+            </PromptCard>
           )}
           {gameState.stage === "no_room" && (
-            <div className="card frosted-glass max-width">
-              <h3>Unable to find room</h3>
-              <p>The room code you entered no longer exists.</p>
-            </div>
+            <PromptCard>
+              <h2>Unable to find room.</h2>
+              <p>
+                Oops! Looks like you've tried joining a room which doesn't
+                exist! Double check your room code and try again.
+              </p>
+            </PromptCard>
           )}
         </div>
         <TipBox />

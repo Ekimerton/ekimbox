@@ -28,7 +28,7 @@ function TipBox() {
     <>
       <div
         className="card frosted-glass animated-border" // added 'animated-border' class
-        style={{ padding: 4, paddingLeft: 12, paddingRight: 12 }}
+        style={{ padding: 4, paddingLeft: 12, paddingRight: 12, height: 55 }}
       >
         <p style={{ fontSize: "0.8rem" }}>
           <strong>Tip:</strong> {tip}
