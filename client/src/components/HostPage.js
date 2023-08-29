@@ -11,8 +11,8 @@ import PromptCard from "./host/PromptCard";
 import PlayerAnswerCard from "./host/PlayerAnswerCard";
 import AnswerCard from "./host/AnswerCard";
 
-// const BASE_URL = "https://ekimbox-server.onrender.com";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://ekimbox-server.onrender.com";
+// const BASE_URL = "http://localhost:3000";
 
 function HostPage() {
   const { gameId } = useParams();

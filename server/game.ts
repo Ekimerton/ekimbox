@@ -12,7 +12,7 @@ const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 8;
 const QUESTIONS_PER_PLAYER = 2;
 const ANSWER_TIME = 60 * 1000;
-const VOTE_TIME = 1500 * 1000;
+const VOTE_TIME = 15 * 1000;
 const SCORE_TIME = 10 * 1000;
 const BUFFER_TIME = 3 * 1000;
 
