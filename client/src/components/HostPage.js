@@ -8,8 +8,10 @@ import { useParams } from "react-router-dom";
 import { message } from "antd";
 import RegisterCard from "./host/RegisterCard";
 import PromptCard from "./host/PromptCard";
-import PlayerAnswerCard from "./host/PlayerAnswerCard";
 import AnswerCard from "./host/AnswerCard";
+import useSound from "use-sound";
+import bgMusic from "./host/sounds/bgmusic.wav";
+import bgMusic2 from "./host/sounds/bgmusic2.wav";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -63,6 +65,11 @@ function HostPage() {
     <>
       <div className="funky-background column-view">
         {contextHolder}
+        <audio
+          src={gameState.stage === "register" ? bgMusic : bgMusic2}
+          autoPlay
+          loop
+        />
         <JoinCodeBox gameID={gameId} />
 
         <div className="container host-container">

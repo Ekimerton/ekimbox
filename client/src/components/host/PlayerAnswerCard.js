@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar } from "antd";
+import useSound from "use-sound";
+import votesound from "./sounds/votesound.wav";
 
 const PlayerAnswerCard = ({
   player,
@@ -8,6 +10,23 @@ const PlayerAnswerCard = ({
   avatarVisible = false,
   numVotes = 0,
 }) => {
+  const [prevVoteCount, setPrevVoteCount] = useState(0);
+
+  const [playVote] = useSound(votesound, {
+    playbackRate: Math.floor(Math.random() * 4) + 1,
+    volume: 0.5,
+    loop: false,
+  });
+
+  useEffect(() => {
+    if (numVotes > prevVoteCount) {
+      playVote();
+    }
+
+    // Update the previous vote count
+    setPrevVoteCount(numVotes);
+  }, [numVotes]);
+
   const voteCircles = Array.from({ length: numVotes }).map((_, idx) => (
     <div key={idx} style={voteCircleStyle}></div>
   ));
@@ -46,9 +65,9 @@ const PlayerAnswerCard = ({
         <div
           style={{
             position: "absolute",
-            bottom: -10, // slightly more than half the size of a circle to center it on the border
+            bottom: -10,
             left: "50%",
-            transform: "translateX(-50%)", // centers the container
+            transform: "translateX(-50%)",
             display: "flex",
             justifyContent: "center",
           }}
@@ -66,11 +85,11 @@ const PlayerAnswerCard = ({
 };
 
 const voteCircleStyle = {
-  width: 16, // making the circle smaller
+  width: 16,
   height: 16,
   borderRadius: "50%",
-  backgroundColor: "#4444ff", // Or any desired color for the vote circle
-  margin: "0 2px", // Adjusted spacing between circles
+  backgroundColor: "#4444ff",
+  margin: "0 2px",
 };
 
 export default PlayerAnswerCard;
