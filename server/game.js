@@ -7,9 +7,9 @@ const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 8;
 const QUESTIONS_PER_PLAYER = 2;
 const ANSWER_TIME = 60 * 1000;
-const VOTE_TIME = 1500 * 1000;
+const VOTE_TIME = 15 * 1000;
 const SCORE_TIME = 10 * 1000;
-const BUFFER_TIME = 3 * 1000;
+const BUFFER_TIME = 1.5 * 1000;
 function createGame(namespace, gameId, onGameEnd) {
     let gameState = {
         round: 0,
@@ -61,9 +61,9 @@ function createGame(namespace, gameId, onGameEnd) {
         });
         socket.on("answer", (answerData) => {
             var _a;
-            const question = (_a = gameState.questions) === null || _a === void 0 ? void 0 : _a.find(q => q.prompt === answerData.prompt);
+            const question = (_a = gameState.questions) === null || _a === void 0 ? void 0 : _a.find((q) => q.prompt === answerData.prompt);
             if (question) {
-                const playerAnswer = question.answers.find(a => a.player.id === answerData.clientId);
+                const playerAnswer = question.answers.find((a) => a.player.id === answerData.clientId);
                 if (playerAnswer) {
                     playerAnswer.answer = answerData.answer;
                 }
@@ -71,15 +71,17 @@ function createGame(namespace, gameId, onGameEnd) {
             namespace.emit("gameState", gameState);
         });
         socket.on("vote", (voteData) => {
-            const { userId, vote } = voteData;
+            const { clientId, questionPrompt, votedForID } = voteData;
             // Find the player who made the vote.
-            const votingPlayer = gameState.players.find((player) => player.id === userId);
+            const votingPlayer = gameState.players.find((player) => player.id === clientId);
             if (!votingPlayer) {
+                console.log(gameState.players);
+                console.log(clientId);
                 console.error("Voting player not found!");
                 return;
             }
             // Find the question being voted on.
-            const question = gameState.questions[gameState.subStage];
+            const question = gameState.questions.find((q) => q.prompt === questionPrompt);
             if (!question) {
                 console.error("Question for voting not found!");
                 return;
@@ -87,15 +89,15 @@ function createGame(namespace, gameId, onGameEnd) {
             // Check if this player has already voted for another answer in this question.
             // If so, remove their previous vote.
             question.answers.forEach((answer) => {
-                const index = answer.votes.findIndex((player) => player.id === userId);
+                const index = answer.votes.findIndex((player) => player.id === clientId);
                 if (index !== -1) {
                     answer.votes.splice(index, 1);
                 }
             });
             // Find the answer being voted on and add the vote.
-            const votedAnswer = question.answers.find((answer) => answer.answer === vote);
+            const votedAnswer = question.answers.find((answer) => answer.player.id === votedForID);
             if (!votedAnswer) {
-                console.error("Voted answer not found!");
+                console.error("Voted player's ID not found!");
                 return;
             }
             votedAnswer.votes.push(votingPlayer);
@@ -119,6 +121,8 @@ function createGame(namespace, gameId, onGameEnd) {
                 startVotePhase();
                 break;
             case "vote":
+                // After each voting sub-round, compute the score for the last question
+                computeScoreForQuestion(gameState.subStage);
                 gameState.subStage++;
                 if (gameState.subStage >= gameState.questions.length) {
                     startScorePhase();
@@ -151,9 +155,17 @@ function createGame(namespace, gameId, onGameEnd) {
             gameState.questions.push({
                 prompt: allPrompts[i],
                 answers: [
-                    { player: gameState.players.find(p => p.id === player1Id), answer: "Blank Answer", votes: [] },
-                    { player: gameState.players.find(p => p.id === player2Id), answer: "Blank Answer", votes: [] }
-                ]
+                    {
+                        player: gameState.players.find((p) => p.id === player1Id),
+                        answer: "Blank Answer",
+                        votes: [],
+                    },
+                    {
+                        player: gameState.players.find((p) => p.id === player2Id),
+                        answer: "Blank Answer",
+                        votes: [],
+                    },
+                ],
             });
         }
         gameState.timeEnd = Date.now() + ANSWER_TIME;
@@ -176,8 +188,26 @@ function createGame(namespace, gameId, onGameEnd) {
     function endGame() {
         gameState.stage = "end";
         namespace.emit("gameState", gameState);
-        // Call onGameEnd() after 5 seconds
-        global.setTimeout(onGameEnd, 5000);
+        // Call onGameEnd() after 30 seconds
+        global.setTimeout(onGameEnd, 30000);
+    }
+    function computeScoreForQuestion(questionNumber) {
+        const currentQuestion = gameState.questions[questionNumber];
+        if (currentQuestion) {
+            currentQuestion.answers.forEach((answer) => {
+                // Add 100 points for each vote
+                answer.player.score += answer.votes.length * 100;
+            });
+            // Check for a sweep
+            if (currentQuestion.answers[0].votes.length > 0 &&
+                currentQuestion.answers[1].votes.length === 0) {
+                currentQuestion.answers[0].player.score += 300; // Add 300 points for a sweep
+            }
+            else if (currentQuestion.answers[1].votes.length > 0 &&
+                currentQuestion.answers[0].votes.length === 0) {
+                currentQuestion.answers[1].player.score += 300; // Add 300 points for a sweep
+            }
+        }
     }
     return {};
 }

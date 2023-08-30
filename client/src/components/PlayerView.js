@@ -5,7 +5,7 @@ function PlayerView({ gameState, showScores = false }) {
     <>
       <h2>
         {showScores ? "Scores" : "Players"}{" "}
-        {!showScores && `${gameState.players.length}/8`}
+        {!showScores && `(${gameState.players.length}/8)`}
       </h2>
       {gameState.players &&
         gameState.players.map((player) => (

@@ -69,7 +69,7 @@ function ControllerPage() {
 
   const myPrompts =
     gameState.questions
-      ?.filter((q) => q.answers.some((answer) => answer.player === clientId))
+      ?.filter((q) => q.answers.some((answer) => answer.player.id === clientId))
       .map((q) => q.prompt) || [];
 
   const handleRegister = useCallback(() => {
@@ -103,7 +103,7 @@ function ControllerPage() {
     socketRef.current.emit("vote", {
       clientId: clientId,
       questionPrompt: gameState.questions[gameState.subStage]?.prompt,
-      votedFor: answerOption.player.id,
+      votedForID: answerOption.player.id,
     });
   };
 

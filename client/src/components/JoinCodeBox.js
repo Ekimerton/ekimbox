@@ -29,13 +29,12 @@ function ScoreView({ gameID }) {
           https://ekimbox.vercel.app
         </p>
       </div>
-      {/* 
-      <QRCode
-        value={`https://ekimbox.vercel.app/play/${gameID}`}
-        size={100}
-        className="frosted-glass"
-      />
-      */}
+      <div className="frosted-glass card" style={{ padding: 0 }}>
+        <QRCode
+          value={`https://ekimbox.vercel.app/play/${gameID}`}
+          size={100}
+        />
+      </div>
     </div>
   );
 }

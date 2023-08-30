@@ -72,7 +72,7 @@ function HostPage() {
           {gameState.stage === "answer" && (
             <PromptCard timeEnd={gameState.timeEnd}>
               <h2>Sending prompts to your devices... now!</h2>
-              <p>Now's time to let out your inner Mark Twain.</p>
+              <p>Now's the time to let out your inner Mark Twain.</p>
             </PromptCard>
           )}
           {gameState.stage === "vote" && (
