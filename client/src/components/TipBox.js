@@ -11,6 +11,11 @@ const tips = [
   "Might be a good idea to turn off your phone's auto-lock",
   "Make sure to plug in your host computer!",
   "Text too small? Zoom in with Ctrl+Plus on Windows or Cmd+Plus on Mac",
+  "Remember to take breaks and stretch your legs!",
+  "Try different strategies to improve your gameplay",
+  "Don't forget to have fun while playing!",
+  "Stay hydrated!",
+  "Keep an eye out for hidden secrets and Easter eggs",
 ];
 
 function TipBox() {
@@ -19,7 +24,7 @@ function TipBox() {
   useEffect(() => {
     const interval = setInterval(() => {
       setTip(tips[Math.floor(Math.random() * tips.length)]);
-    }, 10000); // Change tip every 10 seconds
+    }, 30000); // Change tip every 10 seconds
 
     return () => clearInterval(interval); // This is to clear interval on component unmount
   }, []);

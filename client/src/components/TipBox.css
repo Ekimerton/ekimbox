@@ -20,5 +20,5 @@
   height: 3px;
   width: 100%;
   background-color: black;
-  animation: border-retract 10s infinite;
+  animation: border-retract 30s infinite;
 }
