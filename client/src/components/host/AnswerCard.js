@@ -6,7 +6,6 @@ function AnswerCard({ question, answers, timeEnd }) {
   return (
     <div className="card frosted-glass max-width">
       {timeEnd && <Timer timeEnd={timeEnd} />}
-      <h2>{question}</h2>
       <div
         style={{
           justifyContent: "center",
@@ -17,6 +16,7 @@ function AnswerCard({ question, answers, timeEnd }) {
           padding: 16,
         }}
       >
+        <h2>{question}</h2>
         <PlayerAnswerCard
           answer={answers[0].answer}
           player={answers[0].player}

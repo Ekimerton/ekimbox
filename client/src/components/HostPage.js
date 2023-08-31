@@ -66,7 +66,11 @@ function HostPage() {
       <div className="funky-background column-view">
         {contextHolder}
         <audio
-          src={gameState.stage === "register" ? bgMusic : bgMusic2}
+          src={
+            !gameState.stage || gameState.stage === "register"
+              ? bgMusic
+              : bgMusic2
+          }
           autoPlay
           loop
         />

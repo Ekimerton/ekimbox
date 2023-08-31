@@ -28,7 +28,15 @@ function RegisterCard({ gameState }) {
 
   return (
     <div className="card frosted-glass max-width">
-      <p className="prompt">Waiting for the VIP player to start the game...</p>
+      {gameState.players.length < 2 ? (
+        <p className="prompt">
+          Waiting for at least 2 players to join the game...
+        </p>
+      ) : (
+        <p className="prompt">
+          Waiting for the VIP player to start the game...
+        </p>
+      )}
       <PlayerView gameState={gameState} />
     </div>
   );
