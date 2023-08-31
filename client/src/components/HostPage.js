@@ -10,8 +10,8 @@ import RegisterCard from "./host/RegisterCard";
 import PromptCard from "./host/PromptCard";
 import AnswerCard from "./host/AnswerCard";
 import useSound from "use-sound";
-import bgMusic from "./host/sounds/bgmusic.wav";
-import bgMusic2 from "./host/sounds/bgmusic3.wav";
+import bgMusic from "./host/sounds/bgmusic4.wav";
+import bgMusic2 from "./host/sounds/bgmusic5.wav";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -22,6 +22,31 @@ function HostPage() {
   const [connected, setConnected] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
+
+  const [play1, { stop: stop1 }] = useSound(bgMusic, {
+    loop: true,
+    volume: 0.2,
+  });
+  const [play2, { stop: stop2 }] = useSound(bgMusic2, {
+    loop: true,
+    playbackRate: 0.8,
+    volume: 0.2,
+  });
+
+  useEffect(() => {
+    // Play based on game state
+    if (!gameState.stage || gameState.stage === "register") {
+      play1();
+    } else {
+      play2();
+    }
+
+    // Return cleanup function to stop music on unmount
+    return () => {
+      stop1();
+      stop2();
+    };
+  }, [gameState.stage]);
 
   useEffect(() => {
     const newSocket = io(`${BASE_URL}/game/${gameId}`);
@@ -65,17 +90,7 @@ function HostPage() {
     <>
       <div className="funky-background column-view">
         {contextHolder}
-        <audio
-          src={
-            !gameState.stage || gameState.stage === "register"
-              ? bgMusic
-              : bgMusic2
-          }
-          autoPlay
-          loop
-        />
         <JoinCodeBox gameID={gameId} />
-
         <div className="container host-container">
           {gameState.stage === "register" && (
             <RegisterCard gameState={gameState} />

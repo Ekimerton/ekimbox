@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from "react";
 import PlayerView from "../PlayerView";
-import joinsound from "../host/sounds/joinsound.wav";
+import grunts from "../host/sounds/grunts.wav";
 import useSound from "use-sound";
 
 function RegisterCard({ gameState }) {
-  const [prevPlayerCount, setPrevPlayerCount] = useState(0);
+  const [prevPlayerNames, setPrevPlayerNames] = useState("");
 
-  const [playJoin] = useSound(joinsound, {
-    playbackRate: Math.floor(Math.random() * 3) + 1,
-    volume: 0.5,
-    loop: false,
+  const [playGrunt] = useSound(grunts, {
+    sprite: {
+      1: [80, 300],
+      2: [700, 400],
+      3: [2000, 300],
+      4: [2700, 500],
+    },
+    volume: 0.8,
   });
 
+  function getRandomSprite() {
+    const spriteKeys = ["1", "2", "3", "4"];
+    const randomIndex = Math.floor(Math.random() * spriteKeys.length);
+    return spriteKeys[randomIndex];
+  }
+
+  const currentPlayerNames = JSON.stringify(
+    gameState.players.map((player) => player.name)
+  );
+
   useEffect(() => {
-    function handlePlayerAdded() {
-      console.log("A new player has joined!");
-      playJoin();
+    if (currentPlayerNames !== prevPlayerNames) {
+      const randomSprite = getRandomSprite();
+      playGrunt({ id: randomSprite });
+      setPrevPlayerNames(currentPlayerNames);
     }
-
-    if (gameState.players && gameState.players.length > prevPlayerCount) {
-      handlePlayerAdded();
-    }
-
-    // Update the previous player count
-    setPrevPlayerCount(gameState.players.length);
-  }, [gameState.players.length]);
+  }, [currentPlayerNames, prevPlayerNames, playGrunt]);
 
   return (
     <div className="card frosted-glass max-width">
