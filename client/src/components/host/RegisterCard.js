@@ -32,6 +32,7 @@ function RegisterCard({ gameState }) {
       9: [9180, 300],
       10: [10920, 450],
     },
+    volume: 0.8,
   });
 
   function getRandomSprite() {
