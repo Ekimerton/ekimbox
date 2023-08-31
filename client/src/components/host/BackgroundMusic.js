@@ -3,7 +3,7 @@ import useSound from "use-sound";
 import bgMusic from "./sounds/bgmusic4.wav";
 import bgMusic2 from "./sounds/bgmusic5.wav";
 
-function BackgroundMusic({ stage, notificationApi }) {
+function BackgroundMusic({ stage, messageApi }) {
   const [isMusic1Loaded, setMusic1Loaded] = useState(false);
   const [isMusic2Loaded, setMusic2Loaded] = useState(false);
 
@@ -23,13 +23,14 @@ function BackgroundMusic({ stage, notificationApi }) {
   useEffect(() => {
     // Check loading status for music
     if (!isMusic1Loaded || !isMusic2Loaded) {
-      notificationApi.loading({
+      messageApi.loading({
         content: "Loading music...",
         duration: 0,
         style: { width: "100%", alignItems: "center" },
+        key: "musicLoading",
       });
     } else {
-      notificationApi.destroy(); // Destroy loading notification once both tracks are loaded
+      messageApi.destroy("musicLoading"); // Destroy loading notification once both tracks are loaded
     }
   }, [isMusic1Loaded, isMusic2Loaded]);
 

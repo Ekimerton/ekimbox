@@ -20,8 +20,6 @@ function HostPage() {
   const [connected, setConnected] = useState(false);
 
   const [messageApi, messageContextHolder] = message.useMessage();
-  const [notificationApi, notificationContextHolder] =
-    notification.useNotification();
 
   useEffect(() => {
     const newSocket = io(`${BASE_URL}/game/${gameId}`);
@@ -55,17 +53,17 @@ function HostPage() {
         content: "Trying to connect to server...",
         duration: 0,
         style: { width: "100%", alignItems: "center" },
+        key: "serverLoading",
       });
     } else {
-      messageApi.destroy();
+      messageApi.destroy("serverLoading");
     }
   }, [connected, messageApi]);
 
   return (
     <>
-      <BackgroundMusic stage={gameState.stage} notificationApi={messageApi} />
+      <BackgroundMusic stage={gameState.stage} messageApi={messageApi} />
       {messageContextHolder}
-      {notificationContextHolder}
       <div className="funky-background column-view">
         <JoinCodeBox gameID={gameId} />
         <div className="container host-container">
