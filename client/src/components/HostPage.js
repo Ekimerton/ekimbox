@@ -5,13 +5,11 @@ import TipBox from "./TipBox";
 import Timer from "./Timer";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
-import { message } from "antd";
+import { message, notification } from "antd";
 import RegisterCard from "./host/RegisterCard";
 import PromptCard from "./host/PromptCard";
 import AnswerCard from "./host/AnswerCard";
-import useSound from "use-sound";
-import bgMusic from "./host/sounds/bgmusic4.wav";
-import bgMusic2 from "./host/sounds/bgmusic5.wav";
+import BackgroundMusic from "./host/BackgroundMusic";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -21,32 +19,9 @@ function HostPage() {
   const [gameState, setGameState] = useState({});
   const [connected, setConnected] = useState(false);
 
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const [play1, { stop: stop1 }] = useSound(bgMusic, {
-    loop: true,
-    volume: 0.2,
-  });
-  const [play2, { stop: stop2 }] = useSound(bgMusic2, {
-    loop: true,
-    playbackRate: 0.8,
-    volume: 0.2,
-  });
-
-  useEffect(() => {
-    // Play based on game state
-    if (!gameState.stage || gameState.stage === "register") {
-      play1();
-    } else {
-      play2();
-    }
-
-    // Return cleanup function to stop music on unmount
-    return () => {
-      stop1();
-      stop2();
-    };
-  }, [gameState.stage]);
+  const [messageApi, messageContextHolder] = message.useMessage();
+  const [notificationApi, notificationContextHolder] =
+    notification.useNotification();
 
   useEffect(() => {
     const newSocket = io(`${BASE_URL}/game/${gameId}`);
@@ -88,8 +63,10 @@ function HostPage() {
 
   return (
     <>
+      <BackgroundMusic stage={gameState.stage} notificationApi={messageApi} />
+      {messageContextHolder}
+      {notificationContextHolder}
       <div className="funky-background column-view">
-        {contextHolder}
         <JoinCodeBox gameID={gameId} />
         <div className="container host-container">
           {gameState.stage === "register" && (
