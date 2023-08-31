@@ -11,7 +11,7 @@ import PromptCard from "./host/PromptCard";
 import AnswerCard from "./host/AnswerCard";
 import useSound from "use-sound";
 import bgMusic from "./host/sounds/bgmusic.wav";
-import bgMusic2 from "./host/sounds/bgmusic2.wav";
+import bgMusic2 from "./host/sounds/bgmusic3.wav";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
