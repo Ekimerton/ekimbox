@@ -13,6 +13,7 @@ function RegisterView({
       <input
         type="text"
         value={name}
+        maxLength={20}
         onChange={(e) => setName(e.target.value)}
       />
       <button onClick={handleRegister}>Set Name</button>
