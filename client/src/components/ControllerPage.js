@@ -145,6 +145,7 @@ function ControllerPage() {
               <p>{myPrompts[currentPromptIndex]}</p>
               <input
                 type="text"
+                maxLength={20}
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
               />
