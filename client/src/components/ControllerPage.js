@@ -117,7 +117,7 @@ function ControllerPage() {
 
   return (
     <div className="full-screen controller-page">
-      <div className="mobile-container frosted-glass">
+      <div className="mobile-container">
         <ControllerHeader
           name={currentPlayer ? currentPlayer.name : ""}
           timeEnd={gameState.timeEnd}

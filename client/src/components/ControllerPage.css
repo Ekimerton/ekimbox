@@ -1,11 +1,5 @@
 .controller-page {
-    background: linear-gradient(316deg, #72a5e7, #acd6ff);
-    /* #282c34 */
-    background-size: 600% 600%;
-    -webkit-animation: AnimationName 10s ease infinite;
-    -moz-animation: AnimationName 10s ease infinite;
-    animation: AnimationName 10s ease infinite;
-    padding: 0;
+    padding: 8;
 }
 
 .mobile-card {
