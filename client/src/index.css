@@ -97,13 +97,12 @@ h3 {
 
 h4 {
   font-size: 1rem;
-  margin-top: 8px;
 }
 
 p {
   font-size: 1rem;
-  padding-bottom: 8px;
-  padding-top: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 
@@ -118,17 +117,6 @@ a{
 
 a:active  {
   color: #2686ff;
-}
-
-button {
-  margin-top: 8px;
-  width: 100%;
-  max-width: 400px;
-}
-
-input {
-  width: 100%;
-  max-width: 400px;
 }
 
 #root {
@@ -148,7 +136,7 @@ input {
 .container {
   width: 100%;
   max-width: 800px;
-  padding: 48px;
+  padding: 16px;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -209,8 +197,9 @@ input {
 }
 
 .section-centered {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
   flex: 1;
 }
 

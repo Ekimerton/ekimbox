@@ -15,7 +15,6 @@ const tips = [
   "Try different strategies to improve your gameplay",
   "Don't forget to have fun while playing!",
   "Stay hydrated!",
-  "Keep an eye out for hidden secrets and Easter eggs",
 ];
 
 function TipBox() {
@@ -33,7 +32,12 @@ function TipBox() {
     <>
       <div
         className="card frosted-glass animated-border" // added 'animated-border' class
-        style={{ padding: 4, paddingLeft: 12, paddingRight: 12, height: 55 }}
+        style={{
+          padding: 4,
+          paddingLeft: 12,
+          paddingRight: 12,
+          flexShrink: 0,
+        }}
       >
         <p style={{ fontSize: "0.8rem" }}>
           <strong>Tip:</strong> {tip}

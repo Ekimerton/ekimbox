@@ -1,0 +1,11 @@
+.game-card {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.game-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

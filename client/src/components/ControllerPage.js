@@ -168,9 +168,7 @@ function ControllerPage() {
           {gameState.stage === "score" && <PlayerView gameState={gameState} />}
           {gameState.stage === "end" && <p>Thanks for playing!</p>}
         </div>
-        <div>
-          <p>Footer section</p>
-        </div>
+        <div>{/*<p>Footer section</p>*/}</div>
       </div>
     </div>
   );

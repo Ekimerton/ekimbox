@@ -1,12 +1,13 @@
 import React from "react";
 import { QRCode } from "antd";
 
-function ScoreView({ gameID }) {
+function JoinCodeBox({ gameID }) {
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "row",
+        flexShrink: 0,
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -25,7 +26,7 @@ function ScoreView({ gameID }) {
             Room Code: <code>{gameID}</code>
           </p>
         </div>
-        <p style={{ textAlign: "center", paddingTop: 4, paddingBottom: 0 }}>
+        <p style={{ textAlign: "center", marginTop: 4, marginBottom: 0 }}>
           https://ekimbox.vercel.app
         </p>
       </div>
@@ -39,4 +40,4 @@ function ScoreView({ gameID }) {
   );
 }
 
-export default ScoreView;
+export default JoinCodeBox;
