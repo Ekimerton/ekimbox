@@ -4,6 +4,13 @@
   width: 100%;
 }
 
+.logo-section {
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .game-card-content {
   display: flex;
   flex-direction: column;

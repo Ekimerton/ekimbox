@@ -33,7 +33,9 @@ function LandingPage() {
     <div className="column-view" style={{ justifyContent: "center" }}>
       <div className="mobile-container">
         <div className="section-centered">
-          <h1 style={{ marginBottom: 16 }}>Ekimbox</h1>
+          <div className="logo-section">
+            <h1>Ekimbox</h1>
+          </div>
           <div style={{ width: "100%", maxWidth: 400 }}>
             <p>Room Code</p>
             <Input
