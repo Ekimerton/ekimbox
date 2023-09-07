@@ -34,7 +34,7 @@ function LandingPage() {
       <div className="mobile-container">
         <div className="section-centered">
           <h1 style={{ marginBottom: 16 }}>Ekimbox</h1>
-          <div style={{}}>
+          <div style={{ width: "100%", maxWidth: 400 }}>
             <p>Room Code</p>
             <Input
               type="text"
