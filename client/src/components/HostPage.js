@@ -64,7 +64,7 @@ function HostPage() {
     <>
       <BackgroundMusic stage={gameState.stage} messageApi={messageApi} />
       {messageContextHolder}
-      <div className="funky-background column-view">
+      <div className="funky-background full-screen">
         <JoinCodeBox gameID={gameId} />
         <div className="container host-container">
           {gameState.stage === "register" && (

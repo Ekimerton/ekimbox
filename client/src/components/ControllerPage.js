@@ -116,7 +116,7 @@ function ControllerPage() {
   }
 
   return (
-    <div className="column-view controller-page">
+    <div className="full-screen controller-page">
       <div className="mobile-container frosted-glass">
         <ControllerHeader
           name={currentPlayer ? currentPlayer.name : ""}

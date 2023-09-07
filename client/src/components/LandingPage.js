@@ -30,7 +30,7 @@ function LandingPage() {
   };
 
   return (
-    <div className="column-view" style={{ justifyContent: "center" }}>
+    <div className="column-view">
       <div className="mobile-container">
         <div className="section-centered">
           <div className="logo-section">

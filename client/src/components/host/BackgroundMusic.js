@@ -9,14 +9,14 @@ function BackgroundMusic({ stage, messageApi }) {
 
   const [play1, { stop: stop1 }] = useSound(bgMusic, {
     loop: true,
-    volume: 0.01,
+    volume: 0.1,
     onload: () => setMusic1Loaded(true),
   });
 
   const [play2, { stop: stop2 }] = useSound(bgMusic2, {
     loop: true,
     playbackRate: 0.8,
-    volume: 0.01,
+    volume: 0.1,
     onload: () => setMusic2Loaded(true),
   });
 
