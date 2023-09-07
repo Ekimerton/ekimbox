@@ -204,7 +204,8 @@ a:active  {
 .card {
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   margin: 8px;
   padding-left: 20px;
   padding-right: 20px;
