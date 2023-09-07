@@ -76,7 +76,7 @@ function LandingPage() {
                 loading={createLoading}
                 onClick={handleCreateGame}
               >
-                Create Game
+                {createLoading ? "Getting your game ready" : "Create Game"}
               </Button>
             </div>
           </Card>
