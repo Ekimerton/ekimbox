@@ -126,9 +126,7 @@ a:active  {
 
 .column-view {
   align-items: center;
-  justify-content: space-between;
   padding: 16px;
-  height: 100%;
   display: flex;
   flex-direction: column;
 }
