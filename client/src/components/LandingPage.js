@@ -62,7 +62,7 @@ function LandingPage() {
             </Button>
           </div>
           <p style={{ textAlign: "center" }}>or</p>
-          <Card size="small" title="Jokelash" className="game-card">
+          <Card size="small" title="Laugh Track" className="game-card">
             <div className="game-card-content">
               <p style={{ marginTop: 0 }}>
                 Gather 'round, party people! For a rip-roaring game made for 3-8
