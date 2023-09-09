@@ -9,7 +9,7 @@ const QUESTIONS_PER_PLAYER = 2;
 const ANSWER_TIME = 60 * 1000;
 const VOTE_TIME = 15 * 1000;
 const SCORE_TIME = 10 * 1000;
-const BUFFER_TIME = 1.5 * 1000;
+const BUFFER_TIME = 3 * 1000;
 function createGame(namespace, gameId, onGameEnd) {
     let gameState = {
         round: 0,
