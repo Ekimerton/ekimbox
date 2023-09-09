@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Timer from "./Timer";
+import { Card } from "antd";
 import RegisterView from "./controller/RegisterView";
+import AnswerView from "./controller/AnswerView";
+import VoteView from "./controller/VoteView";
 import PlayerView from "./PlayerView";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
@@ -14,9 +17,6 @@ const BASE_URL = "https://ekimbox-server.onrender.com";
 function ControllerPage() {
   const [name, setName] = useState("");
   const [gameState, setGameState] = useState({});
-  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
-  const [answer, setAnswer] = useState("");
-  const [vote, setVote] = useState("");
   const [connected, setConnected] = useState(false);
 
   const socketRef = useRef();
@@ -40,10 +40,6 @@ function ControllerPage() {
     socketRef.current.on("gameState", (newGameState) => {
       console.log("gameState", newGameState);
 
-      if (newGameState.stage === "score") {
-        setCurrentPromptIndex(0);
-      }
-
       setGameState(newGameState);
       setName(
         newGameState.players.find((player) => player.id === clientId)?.name ||
@@ -52,6 +48,12 @@ function ControllerPage() {
     });
 
     socketRef.current.on("disconnect", () => setConnected(false));
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error(err.message); // log error message
+      setGameState({ stage: "no_room", message: err.message });
+    });
+
     socketRef.current.on("error", (error) => console.error(error));
     socketRef.current.emit("ready");
 
@@ -86,42 +88,14 @@ function ControllerPage() {
     socketRef.current.emit("register", { id: clientId, name: name });
   }, [gameState.players, name, clientId]);
 
-  const handleAnswerSubmit = () => {
-    if (answer) {
-      socketRef.current.emit("answer", {
-        clientId: clientId,
-        prompt: myPrompts[currentPromptIndex],
-        answer: answer,
-      });
-      // Reset the selected answer and move to the next prompt
-      setAnswer("");
-      setCurrentPromptIndex((prevIndex) => prevIndex + 1);
-    }
-  };
-
-  const handleVote = (answerOption) => {
-    socketRef.current.emit("vote", {
-      clientId: clientId,
-      questionPrompt: gameState.questions[gameState.subStage]?.prompt,
-      votedForID: answerOption.player.id,
-    });
-  };
-
   const handleStartGame = useCallback(() => {
     socketRef.current.emit("startGame", clientId);
   }, [clientId]);
 
-  if (!gameState.stage) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <div className="full-screen controller-page">
       <div className="mobile-container">
-        <ControllerHeader
-          name={currentPlayer ? currentPlayer.name : ""}
-          timeEnd={gameState.timeEnd}
-        />
+        <ControllerHeader name={currentPlayer ? currentPlayer.name : ""} />
         <div
           style={{
             justifyContent: "center",
@@ -132,6 +106,7 @@ function ControllerPage() {
         >
           {gameState.stage === "register" && (
             <RegisterView
+              currentName={currentPlayer ? currentPlayer.name : ""}
               name={name}
               setName={setName}
               handleRegister={handleRegister}
@@ -141,32 +116,42 @@ function ControllerPage() {
             />
           )}
           {gameState.stage === "answer" && (
-            <>
-              <p>{myPrompts[currentPromptIndex]}</p>
-              <input
-                type="text"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
-              <button onClick={handleAnswerSubmit}>Submit Answer</button>
-            </>
+            <AnswerView
+              prompts={myPrompts}
+              socket={socketRef}
+              clientId={clientId}
+            />
           )}
           {gameState.stage === "vote" && (
-            <div>
-              <h2>
-                Question: {gameState.questions[gameState.subStage]?.prompt}
-              </h2>
-              {gameState.questions[gameState.subStage]?.answers.map(
-                (answerOption, index) => (
-                  <button key={index} onClick={() => handleVote(answerOption)}>
-                    {answerOption.answer}
-                  </button>
-                )
-              )}
-            </div>
+            <VoteView
+              key={gameState.questions[gameState.subStage]?.prompt}
+              questionPrompt={gameState.questions[gameState.subStage]?.prompt}
+              answers={gameState.questions[gameState.subStage]?.answers}
+              socket={socketRef}
+              clientId={clientId}
+            />
           )}
-          {gameState.stage === "score" && <PlayerView gameState={gameState} />}
-          {gameState.stage === "end" && <p>Thanks for playing!</p>}
+          {gameState.stage === "score" && (
+            <Card style={{ width: "100%", textAlign: "center" }} size="small">
+              <p>You are in 🏆 3rd place! Keep up the good work.</p>
+            </Card>
+          )}
+          {gameState.stage === "end" && (
+            <Card style={{ width: "100%", textAlign: "center" }} size="small">
+              <p>
+                You ended in 3rd place 🏆 Good effort and thanks for playing.
+              </p>
+            </Card>
+          )}
+          {gameState.stage === "no_room" && (
+            <Card style={{ width: "100%", textAlign: "center" }} size="small">
+              <h4>Unable to find room.</h4>
+              <p>
+                Double-check your room code and try again! (Make sure your
+                letters are capitalized!)
+              </p>
+            </Card>
+          )}
         </div>
         <div>{/*<p>Footer section</p>*/}</div>
       </div>

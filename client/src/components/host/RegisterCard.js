@@ -36,7 +36,7 @@ function RegisterCard({ gameState }) {
   });
 
   function getRandomSprite() {
-    const spriteKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    const spriteKeys = ["1", "2", "3", "4", "5", "7", "9", "10"];
     const randomIndex = Math.floor(Math.random() * spriteKeys.length);
     return spriteKeys[randomIndex];
   }
@@ -48,6 +48,7 @@ function RegisterCard({ gameState }) {
   useEffect(() => {
     if (currentPlayerNames !== prevPlayerNames) {
       const randomSprite = getRandomSprite();
+      console.log(randomSprite);
       playGrunt({ id: randomSprite });
       setPrevPlayerNames(currentPlayerNames);
     }

@@ -1,19 +1,11 @@
 import React from "react";
-import Timer from "../Timer";
+import { Card } from "antd";
 
 function ControllerHeader({ name }) {
   return (
-    <div
-      className="card mobile-card frosted-glass"
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: 0,
-      }}
-    >
-      <p>{name ? name : "Select a name to join game"}</p>
-    </div>
+    <Card size="small" style={{ textAlign: "center" }}>
+      <p style={{ margin: 0 }}>{name ? name : "Select a name to join game"}</p>
+    </Card>
   );
 }
 

@@ -36,7 +36,7 @@ function LandingPage() {
           <div className="logo-section">
             <h1>Ekimbox</h1>
           </div>
-          <div style={{ width: "100%", maxWidth: 400 }}>
+          <div style={{ width: "100%" }}>
             <p>Room Code</p>
             <Input
               type="text"
