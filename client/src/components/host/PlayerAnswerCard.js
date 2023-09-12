@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Avatar } from "antd";
 import useSound from "use-sound";
-import votesound from "./sounds/votesound.wav";
+import votesound from "./sounds/boom.mp3";
+// import votesound from "./sounds/votesound.wav";
 
 const PlayerAnswerCard = ({
   player,

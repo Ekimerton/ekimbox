@@ -19,6 +19,7 @@ function RegisterView({
             type="text"
             value={name}
             size="large"
+            showCount
             maxLength={20}
             onChange={(e) => setName(e.target.value)}
           />

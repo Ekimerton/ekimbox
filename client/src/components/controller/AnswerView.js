@@ -39,6 +39,7 @@ function AnswerView({ prompts, socket, clientId }) {
         <h4>{prompts[currentIndex]}</h4>
         <Input
           type="text"
+          showCount
           size="large"
           maxLength={120}
           value={answer}
