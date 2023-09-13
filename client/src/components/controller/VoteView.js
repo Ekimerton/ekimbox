@@ -21,6 +21,10 @@ function VoteView({ questionPrompt, answers, socket, clientId }) {
           <Button
             block
             size="large"
+            style={{
+              whiteSpace: "normal",
+              height: "auto",
+            }}
             type={vote === index ? "primary" : "default"}
             onClick={() => handleVote(answerOption, index)}
           >

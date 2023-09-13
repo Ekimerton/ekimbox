@@ -4,8 +4,8 @@ import "./LandingPage.css";
 import axios from "axios"; // You can use any library to make HTTP requests
 import { Button, Card, Skeleton, Input } from "antd";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-// const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://ekimbox-server.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 function LandingPage() {
   const [gameIdInput, setGameIdInput] = useState("");

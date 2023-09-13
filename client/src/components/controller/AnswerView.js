@@ -37,11 +37,13 @@ function AnswerView({ prompts, socket, clientId }) {
     >
       <Space direction="vertical" style={{ width: "100%" }}>
         <h4>{prompts[currentIndex]}</h4>
-        <Input
+        <Input.TextArea
           type="text"
-          showCount
           size="large"
           maxLength={120}
+          allowClear
+          style={{ resize: "none" }}
+          rows={3}
           value={answer}
           onChange={(event) => {
             setAnswer(event.target.value);

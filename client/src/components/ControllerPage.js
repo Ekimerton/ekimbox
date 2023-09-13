@@ -11,8 +11,8 @@ import { useParams } from "react-router-dom";
 import "./ControllerPage.css";
 import ControllerHeader from "./controller/ControllerHeader";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-// const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://ekimbox-server.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 function ControllerPage() {
   const [name, setName] = useState("");
@@ -38,13 +38,14 @@ function ControllerPage() {
       setConnected(true);
     });
     socketRef.current.on("gameState", (newGameState) => {
-      console.log("gameState", newGameState);
+      const currentPlayer = newGameState.players.find(
+        (player) => player.id === clientId
+      );
 
       setGameState(newGameState);
-      setName(
-        newGameState.players.find((player) => player.id === clientId)?.name ||
-          ""
-      );
+      if (currentPlayer) {
+        setName(currentPlayer.name);
+      }
     });
 
     socketRef.current.on("disconnect", () => setConnected(false));
