@@ -73,7 +73,9 @@ function HostPage() {
           )}
           {gameState.stage === "answer" && (
             <PromptCard timeEnd={gameState.timeEnd}>
-              <h2>Sending prompts to your devices... now!</h2>
+              <h2>
+                Round {gameState.round}: Sending prompts to your devices... now!
+              </h2>
               <p>
                 Craft the funniest responses you can think of to the prompts
                 landing on your device. Now's time to channel your inner{" "}
