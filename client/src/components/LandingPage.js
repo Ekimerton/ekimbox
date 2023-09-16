@@ -35,8 +35,9 @@ function LandingPage() {
         <div className="section-centered">
           <div className="logo-section">
             <h1>Ekimbox</h1>
+            <p style={{ margin: 0 }}>The best browser-based party game.</p>
           </div>
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", marginBottom: 8 }}>
             <p>Room Code</p>
             <Input
               type="text"
@@ -65,11 +66,11 @@ function LandingPage() {
           <Card size="small" title="Laugh Track" className="game-card">
             <div className="game-card-content">
               <p style={{ marginTop: 0 }}>
-                Gather 'round, party people! For a rip-roaring game made for 3-8
-                laugh-lovers! 🎉 In just a quick 10-minute flash, you'll be
-                dishing out giggles with your zany answers to quirky prompts.
-                Then, put on your judge's hat and pick your favs. Ready for a
-                laughter rollercoaster? 🎢🤣📝
+                Get ready for a fun and fast-paced game suitable for 3-8
+                players. In just 10 minutes, you'll respond to quirky prompts
+                with your most creative answers. Then, step into the judge's
+                role and choose the best responses. Are you ready for a session
+                of light-hearted competition and laughter? 🎉🤣📝
               </p>
               <Button
                 type="primary"
