@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import PlayerView from "./PlayerView";
-import JoinCodeBox from "./JoinCodeBox";
-import TipBox from "./TipBox";
+import JoinCodeBox from "./host/JoinCodeBox";
+import TipBox from "./host/TipBox";
 import Timer from "./Timer";
 import io from "socket.io-client";
 import { useParams } from "react-router-dom";
-import { message, notification } from "antd";
+import { message } from "antd";
 import RegisterCard from "./host/RegisterCard";
 import PromptCard from "./host/PromptCard";
 import AnswerCard from "./host/AnswerCard";
 import BackgroundMusic from "./host/BackgroundMusic";
+import { generateComedian } from "./host/utils";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -73,7 +74,11 @@ function HostPage() {
           {gameState.stage === "answer" && (
             <PromptCard timeEnd={gameState.timeEnd}>
               <h2>Sending prompts to your devices... now!</h2>
-              <p>Now's the time to let out your inner Mark Twain.</p>
+              <p>
+                Craft the funniest responses you can think of to the prompts
+                landing on your device. Now's time to channel your inner{" "}
+                {generateComedian()}.
+              </p>
             </PromptCard>
           )}
           {gameState.stage === "vote" && (
@@ -99,6 +104,7 @@ function HostPage() {
                 can start a new game by going to the{" "}
                 <a href="https://ekimbox.vercel.app">home page</a>.
               </p>
+              <PlayerView gameState={gameState} showScores final />
             </PromptCard>
           )}
           {gameState.stage === "no_room" && (

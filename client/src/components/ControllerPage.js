@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Timer from "./Timer";
 import { Card } from "antd";
 import RegisterView from "./controller/RegisterView";
 import AnswerView from "./controller/AnswerView";
 import VoteView from "./controller/VoteView";
-import PlayerView from "./PlayerView";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "react-router-dom";
@@ -24,6 +22,33 @@ function ControllerPage() {
 
   // Check if the client already has an ID in local storage
   let clientId = localStorage.getItem("clientId");
+
+  const getPlayerRank = (playerId) => {
+    if (!gameState.players || !Array.isArray(gameState.players))
+      return "unknown";
+
+    const sortedPlayers = [...gameState.players].sort(
+      (a, b) => b.score - a.score
+    );
+
+    const playerRank =
+      sortedPlayers.findIndex((player) => player.id === playerId) + 1;
+
+    return ordinalSuffixOf(playerRank);
+  };
+
+  const ordinalSuffixOf = (num) => {
+    switch (num) {
+      case 1:
+        return "1st place 🥇";
+      case 2:
+        return "2nd place 🥈";
+      case 3:
+        return "3rd place 🥉";
+      default:
+        return `${num}th place`;
+    }
+  };
 
   // If not, generate a new ID and store it in local storage
   if (!clientId) {
@@ -134,13 +159,17 @@ function ControllerPage() {
           )}
           {gameState.stage === "score" && (
             <Card style={{ width: "100%", textAlign: "center" }} size="small">
-              <p>You are in 🏆 3rd place! Keep up the good work.</p>
+              <p>
+                You are in {getPlayerRank(currentPlayer.id)}! Keep up the good
+                work.
+              </p>
             </Card>
           )}
           {gameState.stage === "end" && (
             <Card style={{ width: "100%", textAlign: "center" }} size="small">
               <p>
-                You ended in 3rd place 🏆 Good effort and thanks for playing.
+                You ended in {getPlayerRank(currentPlayer.id)}! Good effort and
+                thanks for playing.
               </p>
             </Card>
           )}
