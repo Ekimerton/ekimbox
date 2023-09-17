@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 import axios from "axios"; // You can use any library to make HTTP requests
-import { Button, Card, Skeleton, Input } from "antd";
+import { Button, Card, Skeleton, Input, Tag } from "antd";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -63,14 +63,25 @@ function LandingPage() {
             </Button>
           </div>
           <p style={{ textAlign: "center" }}>or</p>
-          <Card size="small" title="Laugh Track" className="game-card">
+          <Card
+            size="small"
+            title="Laugh Track 🤭🥁"
+            className="game-card"
+            extra={
+              <>
+                <Tag color="blue">2-8 Players</Tag>
+                <Tag color="blue" style={{ margin: 0 }}>
+                  10 mins
+                </Tag>
+              </>
+            }
+          >
             <div className="game-card-content">
               <p style={{ marginTop: 0 }}>
-                Get ready for a fun and fast-paced game suitable for 3-8
-                players. In just 10 minutes, you'll respond to quirky prompts
-                with your most creative answers. Then, step into the judge's
-                role and choose the best responses. Are you ready for a session
-                of light-hearted competition and laughter? 🎉🤣📝
+                Respond to quirky prompts and win votes for the funniest answer.
+                Grab extra points with a "sweep" — getting all the votes. After
+                two rounds, the highest scorer wins. It's a race of wits and
+                humor; are you ready to get everyone laughing?
               </p>
               <Button
                 type="primary"
