@@ -11,7 +11,7 @@ app.use(express.json()); // for parsing application/json
 const server: http.Server = http.createServer(app);
 const io: IOServer = new socketIo.Server(server, {
   cors: {
-    origin: ["http://localhost:3001", "https://ekimbox.vercel.app"],
+    origin: ["http://localhost:3001", "https://ekimbox.vercel.app", "https://www.nvidia.blog", "https://nvidia.blog"],
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
