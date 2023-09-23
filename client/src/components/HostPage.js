@@ -66,7 +66,11 @@ function HostPage() {
       <BackgroundMusic stage={gameState.stage} messageApi={messageApi} />
       {messageContextHolder}
       <div className="funky-background full-screen">
-        {gameState.stage === "register" && <JoinCodeBox gameID={gameId} />}
+        {!(
+          gameState.stage === "answer" ||
+          gameState.stage === "vote" ||
+          gameState.stage === "score"
+        ) && <JoinCodeBox gameID={gameId} />}
         {(gameState.stage === "answer" ||
           gameState.stage === "vote" ||
           gameState.stage === "score") && (
