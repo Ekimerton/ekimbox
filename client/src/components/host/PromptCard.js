@@ -1,22 +1,17 @@
 import React from "react";
-import Timer from "../Timer";
 
-function PromptCard({ children, timeEnd }) {
+function PromptCard({ children }) {
   return (
-    <div className="card frosted-glass max-width">
-      {timeEnd && <Timer timeEnd={timeEnd} />}
-      <div
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          padding: 16,
-        }}
-      >
-        {children}
-      </div>
+    <div
+      className="card frosted-glass max-width"
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        padding: 16,
+      }}
+    >
+      {children}
     </div>
   );
 }

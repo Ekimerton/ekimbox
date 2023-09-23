@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 
 function PlayerView({ gameState, showScores = false, final = false }) {
   return (
@@ -9,18 +8,18 @@ function PlayerView({ gameState, showScores = false, final = false }) {
         {!showScores && `(${gameState.players.length}/8)`}
       </h2>
       {gameState.players && (
-        <motion.div layout>
+        <div layout>
           {gameState.players
             .sort((a, b) => b.score - a.score)
             .map((player, index) => (
-              <motion.p key={player.id} layoutId={player.id}>
+              <p key={player.id} layoutId={player.id}>
                 {player.name} {showScores && `- ${player.score}`}{" "}
                 {!showScores && gameState.vipID === player.id && (
                   <strong>VIP</strong>
                 )}
-              </motion.p>
+              </p>
             ))}
-        </motion.div>
+        </div>
       )}
     </>
   );

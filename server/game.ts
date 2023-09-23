@@ -1,10 +1,6 @@
 import { Socket, Namespace } from "socket.io";
 import {
-  generatePlayerPairs,
   getQuestions,
-  flattenPlayerAnswers,
-  generateAnswerPairs,
-  shuffle,
 } from "./utils";
 
 const MAX_ROUNDS = 2;
@@ -29,7 +25,6 @@ interface GameState {
   players: Player[];
   vipID?: string;
   timeEnd?: number;
-  submittedVotes?: Record<string, string>;
   questions: {
     prompt: string;
     answers: Array<{ player: Player; answer: string; votes: Player[] }>;

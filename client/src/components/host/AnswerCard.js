@@ -1,20 +1,23 @@
 import React from "react";
-import Timer from "../Timer";
 import PlayerAnswerCard from "./PlayerAnswerCard";
-import { Card } from "antd";
 
 function AnswerCard({ question, answers, timeEnd }) {
   return (
-    <div className="card frosted-glass max-width">
-      {timeEnd && <Timer timeEnd={timeEnd} />}
-      <h2>{question}</h2>
+    <>
+      <div style={{ height: "min-content", maxWidth: "100%" }}>
+        <h2 style={{ color: "black", textShadow: "1px 1px 1px white" }}>
+          {question}
+        </h2>
+        <p style={{ color: "black", textShadow: "1px 1px 1px white" }}>
+          Vote for who you think has the funniest answer!
+        </p>
+      </div>
       <div
         style={{
-          justifyContent: "center",
+          justifyContent: "space-around",
           alignItems: "center",
           display: "flex",
-          flexDirection: "column",
-          height: "100%",
+          flexDirection: "row",
           padding: 16,
         }}
       >
@@ -22,16 +25,16 @@ function AnswerCard({ question, answers, timeEnd }) {
           answer={answers[0].answer}
           player={answers[0].player}
           numVotes={answers[0].votes.length}
+          userHidden={true}
         />
-        <h4 style={{ margin: 4 }}>VS</h4>
         <PlayerAnswerCard
           answer={answers[1].answer}
           player={answers[1].player}
           numVotes={answers[1].votes.length}
-          avatarFirst={false}
+          userHidden={true}
         />
       </div>
-    </div>
+    </>
   );
 }
 

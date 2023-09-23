@@ -12,27 +12,40 @@ const Timer = ({ timeEnd, fontSize = 24 }) => {
       const end = moment(timeEnd).tz("America/New_York");
       const duration = moment.duration(end.diff(now));
 
-      const hours = Math.max(duration.hours(), 0).toString().padStart(2, "0");
       const minutes = Math.max(duration.minutes(), 0)
         .toString()
         .padStart(2, "0");
       const seconds = Math.max(duration.seconds(), 0)
         .toString()
         .padStart(2, "0");
-      setRemainingTime(`${hours}:${minutes}:${seconds}`);
+      setRemainingTime(`${minutes}:${seconds}`);
     };
 
     calculateRemainingTime();
-    timer = setInterval(calculateRemainingTime, 1000);
+    timer = setInterval(calculateRemainingTime, 110);
 
     return () => clearInterval(timer);
   }, [timeEnd]);
 
   return (
-    <p style={{ textAlign: "center", fontSize: fontSize }}>
-      {" "}
-      [ {remainingTime} ]
-    </p>
+    <div
+      className="card frosted-glass"
+      style={{
+        padding: 8,
+        paddingLeft: 12,
+        paddingRight: 12,
+      }}
+    >
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: fontSize,
+          margin: 0,
+        }}
+      >
+        Time Left: {remainingTime}
+      </p>
+    </div>
   );
 };
 

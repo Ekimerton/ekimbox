@@ -30,7 +30,10 @@ function JoinCodeBox({ gameID }) {
           https://ekimbox.vercel.app
         </p>
       </div>
-      <div className="frosted-glass card" style={{ padding: 0 }}>
+      <div
+        className="frosted-glass card"
+        style={{ padding: 0, marginLeft: 16 }}
+      >
         <QRCode
           value={`https://ekimbox.vercel.app/play/${gameID}`}
           size={100}

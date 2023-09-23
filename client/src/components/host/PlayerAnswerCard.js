@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Avatar } from "antd";
+import PlayerProfile from "./PlayerProfile";
 import useSound from "use-sound";
 import votesound from "./sounds/boom.mp3";
 // import votesound from "./sounds/votesound.wav";
@@ -7,15 +7,14 @@ import votesound from "./sounds/boom.mp3";
 const PlayerAnswerCard = ({
   player,
   answer,
-  avatarFirst = true,
-  avatarVisible = false,
+  userHidden = true,
   numVotes = 0,
 }) => {
   const [prevVoteCount, setPrevVoteCount] = useState(0);
 
   const [playVote] = useSound(votesound, {
     // playbackRate: Math.floor(Math.random() * 4) + 1,
-    volume: 0.5,
+    volume: 0.3,
     loop: false,
   });
 
@@ -36,37 +35,28 @@ const PlayerAnswerCard = ({
     <div
       style={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: "center",
-        height: 100,
-        margin: 8,
-        width: "100%",
+        width: "27rem",
+        height: "23rem",
+        margin: 16,
       }}
     >
-      {avatarVisible && avatarFirst && (
-        <Avatar size={100} style={{ marginRight: 16, flexShrink: 0 }}>
-          {player.name}
-        </Avatar>
-      )}
       <div
+        className="card frosted-glass"
         style={{
-          position: "relative",
-          display: "flex",
-          background: "#f3f3f3",
           width: "100%",
           height: "100%",
-          borderRadius: 32,
           justifyContent: "center",
           alignItems: "center",
-          padding: 16,
-          border: "4px solid #444444",
+          marginBottom: 24,
         }}
       >
-        <p>{answer}</p>
+        <p style={{ fontSize: "2rem" }}>{answer}</p>
         <div
           style={{
             position: "absolute",
-            bottom: -10,
+            bottom: -16,
             left: "50%",
             transform: "translateX(-50%)",
             display: "flex",
@@ -76,20 +66,27 @@ const PlayerAnswerCard = ({
           {voteCircles}
         </div>
       </div>
-      {avatarVisible && !avatarFirst && (
-        <Avatar size={100} style={{ marginLeft: 16, flexShrink: 0 }}>
-          {player.name}
-        </Avatar>
-      )}
+
+      <div
+        className="card frosted-glass"
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 8,
+        }}
+      >
+        <PlayerProfile name={player.name} userHidden={userHidden} picNum={4} />
+      </div>
     </div>
   );
 };
 
 const voteCircleStyle = {
-  width: 16,
-  height: 16,
+  width: 32,
+  height: 32,
   borderRadius: "50%",
-  backgroundColor: "#4444ff",
+  backgroundColor: "#FDA90D",
   margin: "0 2px",
 };
 

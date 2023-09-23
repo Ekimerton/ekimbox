@@ -66,16 +66,19 @@ function HostPage() {
       <BackgroundMusic stage={gameState.stage} messageApi={messageApi} />
       {messageContextHolder}
       <div className="funky-background full-screen">
-        <JoinCodeBox gameID={gameId} />
+        {gameState.stage === "register" && <JoinCodeBox gameID={gameId} />}
+        {(gameState.stage === "answer" ||
+          gameState.stage === "vote" ||
+          gameState.stage === "score") && (
+          <Timer timeEnd={gameState.timeEnd} fontSize={32} />
+        )}
         <div className="container host-container">
           {gameState.stage === "register" && (
             <RegisterCard gameState={gameState} />
           )}
           {gameState.stage === "answer" && (
-            <PromptCard timeEnd={gameState.timeEnd}>
-              <h2>
-                Round {gameState.round}: Sending prompts to your devices... now!
-              </h2>
+            <PromptCard>
+              <h2>Sending prompts to your devices... now!</h2>
               <p>
                 Craft the funniest responses you can think of to the prompts
                 landing on your device. Now's time to channel your inner{" "}
@@ -93,7 +96,6 @@ function HostPage() {
           {gameState.stage === "score" && (
             <>
               <div className="card frosted-glass max-width">
-                <Timer timeEnd={gameState.timeEnd} />
                 <PlayerView gameState={gameState} showScores />
               </div>
             </>

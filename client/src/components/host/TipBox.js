@@ -37,6 +37,8 @@ function TipBox() {
           paddingLeft: 12,
           paddingRight: 12,
           flexShrink: 0,
+          width: "auto",
+          height: "auto",
         }}
       >
         <p style={{ fontSize: "0.8rem" }}>
