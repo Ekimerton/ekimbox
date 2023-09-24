@@ -1,15 +1,27 @@
 {
   "files": {
-    "main.css": "/ekimbox/static/css/main.1eb9ac7e.css",
-    "main.js": "/ekimbox/static/js/main.bb1dac1d.js",
+    "main.css": "/ekimbox/static/css/main.af4efec4.css",
+    "main.js": "/ekimbox/static/js/main.186d4a91.js",
+    "static/js/845.3c9bd8c4.chunk.js": "/ekimbox/static/js/845.3c9bd8c4.chunk.js",
     "static/js/787.c4e7f8f9.chunk.js": "/ekimbox/static/js/787.c4e7f8f9.chunk.js",
+    "static/media/bgmusic4.wav": "/ekimbox/static/media/bgmusic4.7322d8b8e1c185540bb1.wav",
+    "static/media/bgmusic5.wav": "/ekimbox/static/media/bgmusic5.e7aa25062287dfe8f1b9.wav",
+    "static/media/grunts2.wav": "/ekimbox/static/media/grunts2.827c17b31c3c65e59151.wav",
+    "static/media/boom.mp3": "/ekimbox/static/media/boom.7caef8ace1bec9e820e9.mp3",
+    "static/media/snowman.png": "/ekimbox/static/media/snowman.a075951f1100649bbf4e.png",
+    "static/media/kirby.png": "/ekimbox/static/media/kirby.7c9980829a73d34d6284.png",
+    "static/media/clown.png": "/ekimbox/static/media/clown.2ed01e3189d89da4cc86.png",
+    "static/media/minion.png": "/ekimbox/static/media/minion.048060a7cf74999b24a9.png",
+    "static/media/mario.png": "/ekimbox/static/media/mario.6144eed5a846a396ca17.png",
+    "static/media/creeper.png": "/ekimbox/static/media/creeper.4205970d76373d5281f8.png",
     "index.html": "/ekimbox/index.html",
-    "main.1eb9ac7e.css.map": "/ekimbox/static/css/main.1eb9ac7e.css.map",
-    "main.bb1dac1d.js.map": "/ekimbox/static/js/main.bb1dac1d.js.map",
+    "main.af4efec4.css.map": "/ekimbox/static/css/main.af4efec4.css.map",
+    "main.186d4a91.js.map": "/ekimbox/static/js/main.186d4a91.js.map",
+    "845.3c9bd8c4.chunk.js.map": "/ekimbox/static/js/845.3c9bd8c4.chunk.js.map",
     "787.c4e7f8f9.chunk.js.map": "/ekimbox/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1eb9ac7e.css",
-    "static/js/main.bb1dac1d.js"
+    "static/css/main.af4efec4.css",
+    "static/js/main.186d4a91.js"
   ]
 }
