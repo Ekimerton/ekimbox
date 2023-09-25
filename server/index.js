@@ -14,7 +14,7 @@ app.use(express_1.default.json()); // for parsing application/json
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.default.Server(server, {
     cors: {
-        origin: ["http://localhost:3001", "https://ekimbox.vercel.app", "https://www.nvidia.blog", "https://nvidia.blog"],
+        origin: ["http://localhost:3001", "https://ekimbox.vercel.app", "https://www.nvidia.blog", "https://nvidia.blog", 'https://chickadee.fun', 'https://www.chickadee.fun'],
         methods: ["GET", "POST"],
         allowedHeaders: ["my-custom-header"],
         credentials: true,

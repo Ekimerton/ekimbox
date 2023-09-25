@@ -27,7 +27,7 @@ function JoinCodeBox({ gameID }) {
           </p>
         </div>
         <p style={{ textAlign: "center", marginTop: 4, marginBottom: 0 }}>
-          https://ekimbox.vercel.app
+          https://chickadee.fun
         </p>
       </div>
       <div
