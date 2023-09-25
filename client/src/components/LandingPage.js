@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 import axios from "axios"; // You can use any library to make HTTP requests
 import { Button, Card, Skeleton, Input, Tag } from "antd";
+import Logo from "../logo.png";
 
 const BASE_URL = "https://ekimbox-server.onrender.com";
 // const BASE_URL = "http://localhost:3000";
@@ -34,7 +35,12 @@ function LandingPage() {
       <div className="mobile-container">
         <div className="section-centered">
           <div className="logo-section">
-            <h1>Ekimbox</h1>
+            <img
+              src={Logo}
+              alt="chickadee.fun logo"
+              style={{ height: 96, width: 96, marginBottom: -8 }}
+            />
+            <h1>chickadee.fun</h1>
             <p style={{ margin: 0 }}>The best browser-based party game.</p>
           </div>
           <div style={{ width: "100%", marginBottom: 8 }}>
