@@ -175,10 +175,10 @@ function ControllerPage() {
           )}
           {gameState.stage === "no_room" && (
             <Card style={{ width: "100%", textAlign: "center" }} size="small">
-              <h4>Unable to find room.</h4>
+              <h4>Unable to find room</h4>
               <p>
                 Double-check your room code and try again! (Make sure your
-                letters are capitalized!)
+                letters are capitalized)
               </p>
             </Card>
           )}
