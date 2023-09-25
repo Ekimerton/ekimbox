@@ -34,10 +34,7 @@ function JoinCodeBox({ gameID }) {
         className="frosted-glass card"
         style={{ padding: 0, marginLeft: 16 }}
       >
-        <QRCode
-          value={`https://ekimbox.vercel.app/play/${gameID}`}
-          size={100}
-        />
+        <QRCode value={`https://chickadee.fun/play/${gameID}`} size={100} />
       </div>
     </div>
   );
