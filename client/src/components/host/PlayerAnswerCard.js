@@ -14,7 +14,7 @@ const PlayerAnswerCard = ({
 
   const [playVote] = useSound(votesound, {
     // playbackRate: Math.floor(Math.random() * 4) + 1,
-    volume: 0.3,
+    volume: 0.2,
     loop: false,
   });
 

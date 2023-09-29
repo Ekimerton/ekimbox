@@ -27,7 +27,7 @@ const PlayerProfile = ({ name = "Anonymous", picNum = 0, userHidden }) => {
         }
       />
       <p style={{ marginLeft: 16, marginRight: 8 }}>
-        {userHidden ? generateAnonymousName() : name}
+        {userHidden ? "Anonymous" : name}
       </p>
     </>
   );
