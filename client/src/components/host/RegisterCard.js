@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import PlayerView from "../PlayerView";
-// import grunts from "./sounds/grunts.wav";
 import grunts from "./sounds/grunts2.wav";
 import useSound from "use-sound";
 
@@ -48,7 +47,6 @@ function RegisterCard({ gameState }) {
   useEffect(() => {
     if (currentPlayerNames !== prevPlayerNames) {
       const randomSprite = getRandomSprite();
-      console.log(randomSprite);
       playGrunt({ id: randomSprite });
       setPrevPlayerNames(currentPlayerNames);
     }

@@ -7,11 +7,12 @@ const MAX_ROUNDS = 2;
 const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 8;
 const QUESTIONS_PER_PLAYER = 2;
+
 const ANSWER_TIME = 60 * 1000;
 const VOTE_TIME = 15 * 1000;
 const SCORE_TIME = 10 * 1000;
 const BUFFER_TIME = 3 * 1000;
-
+const ANIMATION_TIME = 4 * 1000;
 export interface Player {
   id: string;
   name: string;

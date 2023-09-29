@@ -8,7 +8,7 @@ function PromptCard({ children }) {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        padding: 16,
+        padding: 32,
       }}
     >
       {children}

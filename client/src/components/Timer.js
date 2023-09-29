@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment-timezone";
+import ticking from "./host/sounds/ticking.wav";
+import useSound from "use-sound";
 
-const Timer = ({ timeEnd, fontSize = 24 }) => {
+const Timer = ({ timeEnd, fontSize = 24, audible = false }) => {
   const [remainingTime, setRemainingTime] = useState("");
+
+  const [playTicking] = useSound(ticking, {
+    volume: 0.8,
+    loop: false,
+  });
 
   useEffect(() => {
     let timer = null;
@@ -18,14 +25,18 @@ const Timer = ({ timeEnd, fontSize = 24 }) => {
       const seconds = Math.max(duration.seconds(), 0)
         .toString()
         .padStart(2, "0");
+
+      if (minutes === "00" && seconds === "10" && audible) {
+        playTicking();
+      }
       setRemainingTime(`${minutes}:${seconds}`);
     };
 
     calculateRemainingTime();
-    timer = setInterval(calculateRemainingTime, 110);
+    timer = setInterval(calculateRemainingTime, 1000);
 
     return () => clearInterval(timer);
-  }, [timeEnd]);
+  }, [timeEnd, playTicking]);
 
   return (
     <div

@@ -74,7 +74,11 @@ function HostPage() {
         {(gameState.stage === "answer" ||
           gameState.stage === "vote" ||
           gameState.stage === "score") && (
-          <Timer timeEnd={gameState.timeEnd} fontSize={32} />
+          <Timer
+            timeEnd={gameState.timeEnd}
+            fontSize={32}
+            audible={gameState.stage === "answer"}
+          />
         )}
         <div className="container host-container">
           {gameState.stage === "register" && (
@@ -85,7 +89,7 @@ function HostPage() {
               <h2>Sending prompts to your devices... now!</h2>
               <p>
                 Craft the funniest responses you can think of to the prompts
-                landing on your device. Now's time to channel your inner{" "}
+                landing on your device. Now's the time to channel your inner{" "}
                 {generateComedian()}.
               </p>
             </PromptCard>
@@ -110,7 +114,7 @@ function HostPage() {
               <p>
                 This server will shut down now that the game has finished. You
                 can start a new game by going to the{" "}
-                <a href="https://ekimbox.vercel.app">home page</a>.
+                <a href="https://chickadee.fun">home page</a>.
               </p>
               <PlayerView gameState={gameState} showScores final />
             </PromptCard>

@@ -15,6 +15,7 @@ function AnswerCard({ question, answers, timeEnd }) {
           justifyContent: "space-around",
           alignItems: "center",
           display: "flex",
+          gap: 48,
           flexDirection: "row",
           padding: 16,
         }}

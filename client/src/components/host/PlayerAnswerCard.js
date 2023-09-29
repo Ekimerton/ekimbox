@@ -76,7 +76,7 @@ const PlayerAnswerCard = ({
           padding: 8,
         }}
       >
-        <PlayerProfile name={player.name} userHidden={userHidden} picNum={4} />
+        <PlayerProfile name={player.name} userHidden={true} picNum={4} />
       </div>
     </div>
   );
