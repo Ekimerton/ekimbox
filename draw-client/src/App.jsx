@@ -14,7 +14,7 @@ function App() {
     overflow: hidden;
     display: flex;
     flex-direction: row;
-    padding: 2.5vw;
+    padding: 4vh;
 
     background: repeating-linear-gradient(
       45deg,
@@ -23,15 +23,15 @@ function App() {
       #465298 5%,
       #465298 10%
     );
-    background-size: 75vw 75vw;
-    animation: move-it 20s linear infinite;
+    background-size: 75vh 75vh;
+    animation: move-it 15s linear infinite;
 
   @keyframes move-it {
     0% {
       background-position: initial;
     }
     100% {
-      background-position: 75vw 0;
+      background-position: 75vh 0;
     }
 }
   `
@@ -40,20 +40,19 @@ function App() {
     background-color: #333333;
     color: white;
     flex: 3;
-    width: 30vw;
-    border-radius: 1vw;
-    padding: 1vw;
+    border-radius: 1vh;
+    padding: 1.25vh;
   `
 
   const TrafficLightWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 0.7vw;
+    gap: 0.9vh;
   `
 
   const TrafficLight = styled.div`
-    width: 0.8vw;
-    height: 0.8vw;
+    width: 1.4vh;
+    height: 1.4vh;
     border-radius: 100%;
     background-color: ${(props) => props.color || "white"};
   `
@@ -65,7 +64,7 @@ function App() {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 2vw;
+    gap: 4vh;
   `
 
   const JoinCodeText = styled.div`
@@ -75,56 +74,57 @@ function App() {
     color: white;
 
     h1 {
-      font-size: 6vw;
-      line-height: 6vw;
+      font-size: 10vh;
+      line-height: 9vh;
       font-weight: 300;
       margin: 0;
     }
 
     p {
-      font-size: 1.5vw;
+      font-size: 3vh;
     }
   `
 
   const Logo = styled.h1`
-    margin: 0.6vw 0.6vw;
-    font-size: 1.7vw;
+    margin: 1vh 1vh;
+    font-size: 3vh;
   `
 
   const SectionHeader = styled.h2`
-    font-size: 2vw;
+    font-size: 3.5vh;
     font-weight: 300;
     text-align: center;
-    margin-top: 0.8vw;
-    margin-bottom: 1.6vw;
+    margin-top: 1.5vh;
+    margin-bottom: 2vh;
   `
 
   const HeroSection = styled.section`
     background-color: #111111;
-    margin: 0 -1vw;
-    padding: 2vw 3vw;
+    margin: 0 -1.25vh;
+    padding: 4vh 8vh;
 
     h1 {
-      font-size: 3vw;
+      font-size: 5vh;
     }
   `
 
   const QRCodeWrapper = styled.div`
     background-color: white;
-    border-radius: 0.7vw;
+    border-radius: 1vh;
   `
 
   const PlayerWrapper = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 2vw;
+    gap: 4vh;
+    padding: 0vh 0vh;
     justify-content: center;
   `
   
   const PlayerLogo = styled.img`
-    width: ${(props) => props.small ? "4.5vw" : "13.5vw"};
-    height: 4.5vw;
+    width: ${(props) => props.small ? "8vh" : "24vh"};
+    height: 8vh;
     object-fit: cover;
   `
 
