@@ -12,8 +12,7 @@ import AnswerCard from "./host/AnswerCard";
 import BackgroundMusic from "./host/BackgroundMusic";
 import { generateComedian } from "./host/utils";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-// const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function HostPage() {
   const { gameId } = useParams();

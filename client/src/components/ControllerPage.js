@@ -9,8 +9,7 @@ import { useParams } from "react-router-dom";
 import "./ControllerPage.css";
 import ControllerHeader from "./controller/ControllerHeader";
 
-const BASE_URL = "https://ekimbox-server.onrender.com";
-// const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function ControllerPage() {
   const [name, setName] = useState("");
